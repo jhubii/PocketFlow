@@ -75,22 +75,22 @@ class _StatsState extends State<Stats> {
                       const SizedBox(
                         height: 15,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: const [
-                          Text(
-                            'Overall Transaction Report',
-                            style: TextStyle(
-                              color: mainDesignColor,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      PieChartTransactions(
-                        user: widget.user,
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.start,
+                      //   children: const [
+                      //     Text(
+                      //       'Overall Transaction Report',
+                      //       style: TextStyle(
+                      //         color: mainDesignColor,
+                      //         fontSize: 17,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // PieChartTransactions(
+                      //   user: widget.user,
+                      // ),
                       const SizedBox(
                         height: 15,
                       ),

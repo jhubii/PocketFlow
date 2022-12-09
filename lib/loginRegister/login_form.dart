@@ -143,19 +143,35 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  void alertBanner(message) => Flushbar(
-        duration: Duration(seconds: 4),
+  void alertBanner(title, message, type, color) => Flushbar(
+        duration: Duration(seconds: 3),
         flushbarPosition: FlushbarPosition.TOP,
-        icon: Icon(Icons.error_rounded, size: 60, color: Colors.white),
+        icon: type == 'Success'
+            ? Icon(Icons.check_circle_rounded, size: 60, color: Colors.white)
+            : Icon(Icons.error_rounded, size: 60, color: Colors.white),
         shouldIconPulse: false,
-        title: 'Error !!',
+        title: title,
         message: message,
         borderRadius: BorderRadius.circular(25),
         margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        backgroundColor: Color.fromARGB(255, 157, 37, 37),
+        backgroundColor: color,
         dismissDirection: FlushbarDismissDirection.VERTICAL,
       )..show(context);
+
+  // void alertBanner(message) => Flushbar(
+  //       duration: Duration(seconds: 4),
+  //       flushbarPosition: FlushbarPosition.TOP,
+  //       icon: Icon(Icons.error_rounded, size: 60, color: Colors.white),
+  //       shouldIconPulse: false,
+  //       title: 'Error !!',
+  //       message: message,
+  //       borderRadius: BorderRadius.circular(25),
+  //       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+  //       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+  //       backgroundColor: Color.fromARGB(255, 157, 37, 37),
+  //       dismissDirection: FlushbarDismissDirection.VERTICAL,
+  //     )..show(context);
 
   Future signIn() async {
     showDialog(
@@ -184,7 +200,19 @@ class _LoginFormState extends State<LoginForm> {
     }
     Navigator.pop(context);
     if (error != '') {
-      alertBanner(error);
+      alertBanner(
+        'Error !!',
+        error,
+        'Error',
+        Color.fromARGB(255, 157, 37, 37),
+      );
+    } else {
+      alertBanner(
+        'Success !!',
+        "Logged in successfully",
+        'Success',
+        Color.fromARGB(255, 47, 101, 114),
+      );
     }
   }
 }
