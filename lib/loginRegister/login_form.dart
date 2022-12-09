@@ -188,9 +188,6 @@ class _LoginFormState extends State<LoginForm> {
         email: emailcontroller.text.trim(),
         password: passwordcontroller.text.trim(),
       );
-      setState(() {
-        error = "";
-      });
     } on FirebaseAuthException catch (e) {
       print(e);
 
@@ -198,7 +195,7 @@ class _LoginFormState extends State<LoginForm> {
         error = e.message.toString();
       });
     }
-    Navigator.pop(context);
+    // Navigator.pop(context);
     if (error != '') {
       alertBanner(
         'Error !!',
