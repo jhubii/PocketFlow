@@ -1,3 +1,4 @@
+import 'package:PocketFlow/content/graph/indicator.dart';
 import 'package:PocketFlow/datahandling/users.dart';
 import 'package:PocketFlow/design/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,15 +30,13 @@ class _PieChartCategoryState extends State<PieChartCategory> {
         child: Center(
           child: Row(
             children: [
-              const SizedBox(
-                height: 18,
-              ),
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: checkData(widget.user.id),
                 ),
               ),
+              showIndicator()
             ],
           ),
         ),
@@ -71,58 +70,98 @@ class _PieChartCategoryState extends State<PieChartCategory> {
         });
   }
 
+  Widget showIndicator() => SizedBox(
+        width: 130,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const <Widget>[
+            Indicator(
+              color: Color(0xff0293ee),
+              text: 'Entertainment',
+              isSquare: true,
+              textColor: Colors.white,
+            ),
+            Indicator(
+              color: Color(0xfff8b250),
+              text: 'Social & Lifestyle',
+              isSquare: true,
+              textColor: Colors.white,
+            ),
+            Indicator(
+              color: Color(0xff845bef),
+              text: 'Beauty & Health',
+              isSquare: true,
+              textColor: Colors.white,
+            ),
+            Indicator(
+              color: Color(0xff13d38e),
+              text: 'Work & Education',
+              isSquare: true,
+              textColor: Colors.white,
+            ),
+            Indicator(
+              color: Color.fromARGB(255, 253, 83, 83),
+              text: 'Others',
+              isSquare: true,
+              textColor: Colors.white,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+      );
+
   Widget realtimeData(id) {
     return StreamBuilder(
-        stream:
-            FirebaseFirestore.instance.collection('Users').doc(id).snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Text("Loading");
-          }
-          var transactionDocument = snapshot.data;
-          int income = transactionDocument!['totalIncome'];
-          int expense = transactionDocument['totalExpense'];
-          int cat1 = transactionDocument['cat1'];
-          int cat2 = transactionDocument['cat2'];
-          int cat3 = transactionDocument['cat3'];
-          int cat4 = transactionDocument['cat4'];
-          int cat5 = transactionDocument['cat5'];
-          int totalMoneyFlow = income + expense;
-          double cat1percent = (cat1 / totalMoneyFlow) * 100;
-          double cat2percent = (cat2 / totalMoneyFlow) * 100;
-          double cat3percent = (cat3 / totalMoneyFlow) * 100;
-          double cat4percent = (cat4 / totalMoneyFlow) * 100;
-          double cat5percent = (cat5 / totalMoneyFlow) * 100;
-          return PieChart(
-            PieChartData(
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  setState(() {
-                    if (!event.isInterestedForInteractions ||
-                        pieTouchResponse == null ||
-                        pieTouchResponse.touchedSection == null) {
-                      touchedIndex = -1;
-                      return;
-                    }
-                    touchedIndex =
-                        pieTouchResponse.touchedSection!.touchedSectionIndex;
-                  });
-                },
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              sectionsSpace: 0,
-              centerSpaceRadius: 50,
-              sections: showingSections(
-                  cat1percent.round(),
-                  cat2percent.round(),
-                  cat3percent.round(),
-                  cat4percent.round(),
-                  cat5percent.round()),
+      stream:
+          FirebaseFirestore.instance.collection('Users').doc(id).snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Text("Loading");
+        }
+        var transactionDocument = snapshot.data;
+        int income = transactionDocument!['totalIncome'];
+        int expense = transactionDocument['totalExpense'];
+        int cat1 = transactionDocument['cat1'];
+        int cat2 = transactionDocument['cat2'];
+        int cat3 = transactionDocument['cat3'];
+        int cat4 = transactionDocument['cat4'];
+        int cat5 = transactionDocument['cat5'];
+        int totalMoneyFlow = income + expense;
+        double cat1percent = (cat1 / totalMoneyFlow) * 100;
+        double cat2percent = (cat2 / totalMoneyFlow) * 100;
+        double cat3percent = (cat3 / totalMoneyFlow) * 100;
+        double cat4percent = (cat4 / totalMoneyFlow) * 100;
+        double cat5percent = (cat5 / totalMoneyFlow) * 100;
+        return PieChart(
+          PieChartData(
+            pieTouchData: PieTouchData(
+              touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                setState(() {
+                  if (!event.isInterestedForInteractions ||
+                      pieTouchResponse == null ||
+                      pieTouchResponse.touchedSection == null) {
+                    touchedIndex = -1;
+                    return;
+                  }
+                  touchedIndex =
+                      pieTouchResponse.touchedSection!.touchedSectionIndex;
+                });
+              },
             ),
-          );
-        });
+            borderData: FlBorderData(
+              show: false,
+            ),
+            sectionsSpace: 0,
+            centerSpaceRadius: 40,
+            sections: showingSections(cat1percent.round(), cat2percent.round(),
+                cat3percent.round(), cat4percent.round(), cat5percent.round()),
+          ),
+        );
+      },
+    );
   }
 
   List<PieChartSectionData> showingSections(
@@ -134,7 +173,7 @@ class _PieChartCategoryState extends State<PieChartCategory> {
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 83, 253, 94),
+            color: const Color(0xff0293ee),
             value: entertainment.toDouble(),
             title: '$entertainment%',
             radius: radius,
@@ -146,7 +185,7 @@ class _PieChartCategoryState extends State<PieChartCategory> {
           );
         case 1:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 81, 93, 255),
+            color: const Color(0xfff8b250),
             value: social.toDouble(),
             title: '$social%',
             radius: radius,
@@ -158,7 +197,7 @@ class _PieChartCategoryState extends State<PieChartCategory> {
           );
         case 2:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 171, 83, 253),
+            color: const Color(0xff845bef),
             value: beauty.toDouble(),
             title: '$beauty%',
             radius: radius,
@@ -170,7 +209,7 @@ class _PieChartCategoryState extends State<PieChartCategory> {
           );
         case 3:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 247, 83, 253),
+            color: const Color(0xff13d38e),
             value: work.toDouble(),
             title: '$work%',
             radius: radius,
@@ -182,7 +221,7 @@ class _PieChartCategoryState extends State<PieChartCategory> {
           );
         case 4:
           return PieChartSectionData(
-            color: Color.fromARGB(255, 253, 83, 83),
+            color: const Color.fromARGB(255, 253, 83, 83),
             value: other.toDouble(),
             title: '$other%',
             radius: radius,

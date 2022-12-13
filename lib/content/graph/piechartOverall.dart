@@ -1,3 +1,4 @@
+import 'package:PocketFlow/content/graph/indicator.dart';
 import 'package:PocketFlow/datahandling/users.dart';
 import 'package:PocketFlow/design/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,12 +39,41 @@ class _PieChartOverallState extends State<PieChartOverall> {
                   child: checkData(widget.user.id),
                 ),
               ),
+              showIndicator()
             ],
           ),
         ),
       ),
     );
   }
+
+  Widget showIndicator() => SizedBox(
+        width: 90,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const <Widget>[
+              Indicator(
+                color: Color(0xff53fdd7),
+                text: 'Income',
+                isSquare: true,
+                textColor: Colors.white,
+              ),
+              Indicator(
+                color: Color(0xffff5182),
+                text: 'Expense',
+                isSquare: true,
+                textColor: Colors.white,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+        ),
+      );
 
   Widget checkData(id) {
     return StreamBuilder(
@@ -105,7 +135,7 @@ class _PieChartOverallState extends State<PieChartOverall> {
                 show: false,
               ),
               sectionsSpace: 0,
-              centerSpaceRadius: 50,
+              centerSpaceRadius: 45,
               sections: showingSections(
                   incomePercent.round(), expensePercent.round()),
             ),
