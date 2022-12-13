@@ -1,4 +1,4 @@
-import 'package:PocketFlow/content/graph/bargraph.dart';
+import 'package:PocketFlow/content/graph/piechartCategory.dart';
 import 'package:PocketFlow/content/graph/piechartOverall.dart';
 import 'package:PocketFlow/datahandling/users.dart';
 import 'package:PocketFlow/design/colors.dart';
@@ -75,30 +75,11 @@ class _StatsState extends State<Stats> {
                       const SizedBox(
                         height: 15,
                       ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.start,
-                      //   children: const [
-                      //     Text(
-                      //       'Overall Transaction Report',
-                      //       style: TextStyle(
-                      //         color: mainDesignColor,
-                      //         fontSize: 17,
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-                      // PieChartTransactions(
-                      //   user: widget.user,
-                      // ),
-                      const SizedBox(
-                        height: 15,
-                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: const [
                           Text(
-                            'Monthly Transaction Report',
+                            'Overall Transaction Report',
                             style: TextStyle(
                               color: mainDesignColor,
                               fontSize: 17,
@@ -107,7 +88,26 @@ class _StatsState extends State<Stats> {
                           ),
                         ],
                       ),
-                      BarGraph(user: widget.user),
+                      PieChartOverall(
+                        user: widget.user,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const [
+                          Text(
+                            'Transactions by Category Report',
+                            style: TextStyle(
+                              color: mainDesignColor,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      PieChartCategory(user: widget.user),
                       const SizedBox(height: 70),
                     ],
                   ),
@@ -264,7 +264,7 @@ class _StatsState extends State<Stats> {
   Widget imgNotExist() => const Icon(
         Icons.person,
         color: whiteDesignColor,
-        size: 12,
+        size: 30,
       );
 
   Widget realtimeDataImage(id, info) {

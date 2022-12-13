@@ -7,6 +7,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({
@@ -166,47 +167,35 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   void alertBanner(title, message, type, color) => Flushbar(
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         flushbarPosition: FlushbarPosition.TOP,
         icon: type == 'Success'
-            ? Icon(Icons.check_circle_rounded, size: 60, color: Colors.white)
-            : Icon(Icons.error_rounded, size: 60, color: Colors.white),
+            ? const Icon(Icons.check_circle_rounded,
+                size: 60, color: Colors.white)
+            : const Icon(Icons.error_rounded, size: 60, color: Colors.white),
         shouldIconPulse: false,
         title: title,
         message: message,
         borderRadius: BorderRadius.circular(25),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         backgroundColor: color,
         dismissDirection: FlushbarDismissDirection.VERTICAL,
       )..show(context);
-
-  // void alertBanner(message) => Flushbar(
-  //       duration: Duration(seconds: 4),
-  //       flushbarPosition: FlushbarPosition.TOP,
-  //       icon: Icon(Icons.error_rounded, size: 60, color: Colors.white),
-  //       shouldIconPulse: false,
-  //       title: 'Error !!',
-  //       message: message,
-  //       borderRadius: BorderRadius.circular(25),
-  //       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-  //       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-  //       backgroundColor: Color.fromARGB(255, 157, 37, 37),
-  //       dismissDirection: FlushbarDismissDirection.VERTICAL,
-  //     )..show(context);
 
   Future registerUser() async {
     showDialog(
       context: context,
       useRootNavigator: false,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(
-          color: mainDesignColor,
+      builder: (context) => Center(
+        child: LoadingAnimationWidget.threeArchedCircle(
+          color: const Color.fromARGB(255, 40, 159, 182),
+          size: 70,
         ),
       ),
     );
-
+    Navigator.of(context).pop();
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailcontroller.text.trim(),
@@ -221,23 +210,13 @@ class _RegisterFormState extends State<RegisterForm> {
       print(e);
       setState(() {
         error = e.message.toString();
+        alertBanner(
+          'Error !!',
+          error,
+          'Error',
+          const Color.fromARGB(255, 157, 37, 37),
+        );
       });
-    }
-    Navigator.pop(context);
-    if (error != '') {
-      alertBanner(
-        'Error !!',
-        error,
-        'Error',
-        Color.fromARGB(255, 157, 37, 37),
-      );
-    } else {
-      alertBanner(
-        'Success !!',
-        "Welcome to PocketFlow",
-        'Success',
-        Color.fromARGB(255, 47, 101, 114),
-      );
     }
   }
 
@@ -257,11 +236,14 @@ class _RegisterFormState extends State<RegisterForm> {
       balance: 0,
       totalExpense: 0,
       totalIncome: 0,
+      cat1: 0,
+      cat2: 0,
+      cat3: 0,
+      cat4: 0,
+      cat5: 0,
     );
 
     final json = newUser.toJson();
     await docUser.set(json);
-
-    Navigator.pop(context);
   }
 }

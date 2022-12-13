@@ -25,6 +25,16 @@ class EditTransaction extends StatefulWidget {
   int totalIncomeData = 0;
   int totalExpenseData = 0;
   int balance = 0;
+  int oldcat1 = 0;
+  int oldcat2 = 0;
+  int oldcat3 = 0;
+  int oldcat4 = 0;
+  int oldcat5 = 0;
+  int newcat1 = 0;
+  int newcat2 = 0;
+  int newcat3 = 0;
+  int newcat4 = 0;
+  int newcat5 = 0;
   final value = NumberFormat("#,##0.00", "en_US");
 
   @override
@@ -64,6 +74,7 @@ class _EditTransactionState extends State<EditTransaction> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
+            backButtonClicked(widget.transactions.id);
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -146,13 +157,13 @@ class _EditTransactionState extends State<EditTransaction> {
                   height: 10,
                 ),
                 const Text(
-                  'Title :',
+                  'Description :',
                   style: labelTransactionStyle,
                 ),
                 RoundedInput(
-                  hint: 'Write your title here',
+                  hint: 'Write your description here',
                   color: mainDesignColor,
-                  formvalue: 'Enter Title',
+                  formvalue: 'Enter Description',
                   inputController: titlecontroller,
                   enabled: true,
                 ),
@@ -408,7 +419,7 @@ class _EditTransactionState extends State<EditTransaction> {
         ),
       );
 
-  popUpConfirmation(String id) => showDialog(
+  popUpConfirmation() => showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
@@ -432,7 +443,7 @@ class _EditTransactionState extends State<EditTransaction> {
                     height: 100,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(98, 249, 220, 161)),
+                        color: const Color.fromARGB(98, 249, 220, 161)),
                   ),
                 ),
                 Positioned(
@@ -443,7 +454,7 @@ class _EditTransactionState extends State<EditTransaction> {
                     height: 60,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(98, 249, 220, 161)),
+                        color: const Color.fromARGB(98, 249, 220, 161)),
                   ),
                 ),
                 Padding(
@@ -472,14 +483,14 @@ class _EditTransactionState extends State<EditTransaction> {
                         children: [
                           TextButton(
                             onPressed: () {
-                              editTransaction(id);
+                              updateTransaction();
                               Navigator.pop(context);
                               Navigator.pop(context);
                               alertBanner(
                                 'Success !!',
-                                "Transaction has been updated",
+                                "Transaction was successfully updated",
                                 'Success',
-                                Color.fromARGB(255, 47, 101, 114),
+                                const Color.fromARGB(255, 47, 101, 114),
                               );
                             },
                             child: const Text(
@@ -513,59 +524,87 @@ class _EditTransactionState extends State<EditTransaction> {
         ),
       );
 
+  backButtonClicked(String id) async {
+    final docTransaction =
+        FirebaseFirestore.instance.collection('Transactions').doc(id);
+    final docUser =
+        FirebaseFirestore.instance.collection('Users').doc(widget.user.id);
+    var transactionType = await docTransaction.get().then((value) {
+      return value.get('transactionType');
+    });
+    var balance = await docUser.get().then((value) {
+      return value.get('balance');
+    });
+    var amount = await docTransaction.get().then((value) {
+      return value.get('amount');
+    });
+    if (transactionType == 'Income') {
+      var oldbalance = balance + amount;
+      docUser.update({
+        'balance': oldbalance,
+      });
+    } else {
+      var oldbalance = balance - amount;
+      docUser.update({
+        'balance': oldbalance,
+      });
+    }
+  }
+
   errorHandling() {
     if (transaction == '') {
       alertBanner(
         'Error !!',
         'A type of transaction should be selected',
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else if (titlecontroller.text == '') {
       alertBanner(
         'Error !!',
         "Title can't be empty",
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else if (category == '') {
       alertBanner(
         'Error !!',
         "A category should be selected",
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else if (amountcontroller.text == '') {
       alertBanner(
         'Error !!',
         "Amount can't be empty",
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else if (int.tryParse(amountcontroller.text) == null) {
       alertBanner(
         'Invalid Input !!',
         "Amount should be a number",
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else {
-      popUpConfirmation(widget.transactions.id);
+      editTransaction();
     }
   }
 
   void alertBanner(title, message, type, color) => Flushbar(
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         flushbarPosition: FlushbarPosition.TOP,
         icon: type == 'Success'
-            ? Icon(Icons.check_circle_rounded, size: 60, color: Colors.white)
-            : Icon(Icons.error_rounded, size: 60, color: Colors.white),
+            ? const Icon(Icons.check_circle_rounded,
+                size: 60, color: Colors.white)
+            : const Icon(Icons.error_rounded, size: 60, color: Colors.white),
         shouldIconPulse: false,
         title: title,
         message: message,
         borderRadius: BorderRadius.circular(25),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         backgroundColor: color,
         dismissDirection: FlushbarDismissDirection.VERTICAL,
       )..show(context);
@@ -586,9 +625,37 @@ class _EditTransactionState extends State<EditTransaction> {
         });
   }
 
-  editTransaction(String id) async {
-    final docTransaction =
-        FirebaseFirestore.instance.collection('Transactions').doc(id);
+  updateTransaction() {
+    final docUser =
+        FirebaseFirestore.instance.collection('Users').doc(widget.user.id);
+    final docTransaction = FirebaseFirestore.instance
+        .collection('Transactions')
+        .doc(widget.transactions.id);
+
+    docUser.update({
+      'totalIncome': widget.totalIncomeData,
+      'totalExpense': widget.totalExpenseData,
+      'balance': widget.balance,
+      'cat1': widget.newcat1,
+      'cat2': widget.newcat2,
+      'cat3': widget.newcat3,
+      'cat4': widget.newcat4,
+      'cat5': widget.newcat5,
+    });
+
+    docTransaction.update({
+      'title': titlecontroller.text,
+      'transactionType': transaction,
+      'category': category,
+      'amount': int.parse(amountcontroller.text),
+      'transactionDate': Timestamp.fromDate(transactionDate),
+    });
+  }
+
+  editTransaction() async {
+    final docTransaction = FirebaseFirestore.instance
+        .collection('Transactions')
+        .doc(widget.transactions.id);
 
     final docUser =
         FirebaseFirestore.instance.collection('Users').doc(widget.user.id);
@@ -605,13 +672,91 @@ class _EditTransactionState extends State<EditTransaction> {
     var oldamount = await docTransaction.get().then((value) {
       return value.get('amount');
     });
+    var cat1 = await docUser.get().then((value) {
+      return value.get('cat1');
+    });
+    var cat2 = await docUser.get().then((value) {
+      return value.get('cat2');
+    });
+    var cat3 = await docUser.get().then((value) {
+      return value.get('cat3');
+    });
+    var cat4 = await docUser.get().then((value) {
+      return value.get('cat4');
+    });
+    var cat5 = await docUser.get().then((value) {
+      return value.get('cat5');
+    });
+
+    if (category == 'Entertainment') {
+      widget.oldcat1 = cat1 - oldamount;
+      widget.oldcat2 = cat2;
+      widget.oldcat3 = cat3;
+      widget.oldcat4 = cat4;
+      widget.oldcat5 = cat5;
+    } else if (category == 'Social & Lifestyle') {
+      widget.oldcat2 = cat2 - oldamount;
+      widget.oldcat1 = cat1;
+      widget.oldcat3 = cat3;
+      widget.oldcat4 = cat4;
+      widget.oldcat5 = cat5;
+    } else if (category == 'Beauty & Health') {
+      widget.oldcat3 = cat3 - oldamount;
+      widget.oldcat2 = cat2;
+      widget.oldcat1 = cat1;
+      widget.oldcat4 = cat4;
+      widget.oldcat5 = cat5;
+    } else if (category == 'Work & Education') {
+      widget.oldcat4 = cat4 - oldamount;
+      widget.oldcat2 = cat2;
+      widget.oldcat3 = cat3;
+      widget.oldcat1 = cat1;
+      widget.oldcat5 = cat5;
+    } else if (category == 'Others') {
+      widget.oldcat5 = cat5 - oldamount;
+      widget.oldcat2 = cat2;
+      widget.oldcat3 = cat3;
+      widget.oldcat4 = cat4;
+      widget.oldcat1 = cat1;
+    }
+
+    if (category == 'Entertainment') {
+      widget.newcat1 = int.parse(amountcontroller.text) + widget.oldcat1;
+      widget.newcat2 = widget.oldcat2;
+      widget.newcat3 = widget.oldcat3;
+      widget.newcat4 = widget.oldcat4;
+      widget.newcat5 = widget.oldcat5;
+    } else if (category == 'Social & Lifestyle') {
+      widget.newcat2 = int.parse(amountcontroller.text) + widget.oldcat2;
+      widget.newcat1 = widget.oldcat1;
+      widget.newcat3 = widget.oldcat3;
+      widget.newcat4 = widget.oldcat4;
+      widget.newcat5 = widget.oldcat5;
+    } else if (category == 'Beauty & Health') {
+      widget.newcat3 = int.parse(amountcontroller.text) + widget.oldcat3;
+      widget.newcat2 = widget.oldcat2;
+      widget.newcat1 = widget.oldcat1;
+      widget.newcat4 = widget.oldcat4;
+      widget.newcat5 = widget.oldcat5;
+    } else if (category == 'Work & Education') {
+      widget.newcat4 = int.parse(amountcontroller.text) + widget.oldcat4;
+      widget.newcat2 = widget.oldcat2;
+      widget.newcat3 = widget.oldcat3;
+      widget.newcat1 = widget.oldcat1;
+      widget.newcat5 = widget.oldcat5;
+    } else if (category == 'Others') {
+      widget.newcat5 = int.parse(amountcontroller.text) + widget.oldcat5;
+      widget.newcat2 = widget.oldcat2;
+      widget.newcat3 = widget.oldcat3;
+      widget.newcat4 = widget.oldcat4;
+      widget.newcat1 = widget.oldcat1;
+    }
 
     widget.oldtotalIncomeData =
         transaction == 'Income' ? totalIncome - oldamount : totalIncome;
     widget.oldtotalExpenseData =
         transaction == 'Expense' ? totalExpenses - oldamount : totalExpenses;
-    widget.oldbalance =
-        transaction == 'Income' ? balance - oldamount : balance + oldamount;
+    widget.oldbalance = balance;
 
     widget.totalIncomeData = transaction == 'Income'
         ? int.parse(amountcontroller.text) + widget.oldtotalIncomeData
@@ -620,22 +765,30 @@ class _EditTransactionState extends State<EditTransaction> {
         ? int.parse(amountcontroller.text) + widget.oldtotalExpenseData
         : widget.oldtotalExpenseData;
 
-    widget.balance = transaction == 'Income'
-        ? widget.oldbalance + int.parse(amountcontroller.text)
-        : widget.oldbalance - int.parse(amountcontroller.text);
-
-    docUser.update({
-      'totalIncome': widget.totalIncomeData,
-      'totalExpense': widget.totalExpenseData,
-      'balance': widget.balance,
-    });
-
-    docTransaction.update({
-      'title': titlecontroller.text,
-      'transactionType': transaction,
-      'category': category,
-      'amount': int.parse(amountcontroller.text),
-      'transactionDate': Timestamp.fromDate(transactionDate),
-    });
+    if (transaction == 'Income') {
+      if (int.parse(amountcontroller.text) < widget.totalExpenseData) {
+        alertBanner(
+          'Error !!',
+          "Amount entered should be greater than or equal to total expenses",
+          'Error',
+          const Color.fromARGB(255, 157, 37, 37),
+        );
+      } else {
+        popUpConfirmation();
+        widget.balance = widget.oldbalance + int.parse(amountcontroller.text);
+      }
+    } else {
+      if (balance < int.parse(amountcontroller.text)) {
+        alertBanner(
+          'Error !!',
+          "Insufficient Balance",
+          'Error',
+          const Color.fromARGB(255, 157, 37, 37),
+        );
+      } else {
+        popUpConfirmation();
+        widget.balance = widget.oldbalance - int.parse(amountcontroller.text);
+      }
+    }
   }
 }

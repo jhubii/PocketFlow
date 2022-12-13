@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class DisplayTransactions extends StatefulWidget {
   DisplayTransactions({
@@ -24,6 +25,11 @@ class DisplayTransactions extends StatefulWidget {
   int totalIncomeData = 0;
   int totalExpenseData = 0;
   int balance = 0;
+  int cat1 = 0;
+  int cat2 = 0;
+  int cat3 = 0;
+  int cat4 = 0;
+  int cat5 = 0;
 
   @override
   State<DisplayTransactions> createState() => _DisplayTransactionsState();
@@ -129,8 +135,11 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                   }),
                 );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(color: mainDesignColor),
+          return Center(
+            child: LoadingAnimationWidget.threeArchedCircle(
+              color: const Color.fromARGB(255, 40, 159, 182),
+              size: 70,
+            ),
           );
         }
       },
@@ -143,7 +152,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Transactions',
               style: TextStyle(
                 color: mainDesignColor,
@@ -152,7 +161,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
               ),
             ),
             Search(
-              hint: 'Type a transaction title',
+              hint: 'Type a transaction description',
               color: mainDesignColor,
               enabled: true,
               inputController: inputController,
@@ -299,7 +308,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                         Expanded(
                           child: ListTile(
                             leading: const FaIcon(
-                              FontAwesomeIcons.exchange,
+                              FontAwesomeIcons.arrowRightArrowLeft,
                               size: 30,
                               color: mainDesignColor,
                             ),
@@ -416,6 +425,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                           children: [
                             TextButton(
                               onPressed: () {
+                                editButtonClicked(transactions.id);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -481,7 +491,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                     height: 180,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(98, 247, 212, 142)),
+                        color: const Color.fromARGB(98, 247, 212, 142)),
                   ),
                 ),
                 Positioned(
@@ -493,7 +503,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
                         backgroundBlendMode: BlendMode.srcOver,
-                        color: Color.fromARGB(98, 249, 220, 161)),
+                        color: const Color.fromARGB(98, 249, 220, 161)),
                   ),
                 ),
                 Padding(
@@ -530,7 +540,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                                   'Success !!',
                                   "Transaction was deleted",
                                   'Success',
-                                  Color.fromARGB(255, 47, 101, 114),
+                                  const Color.fromARGB(255, 47, 101, 114),
                                 );
                               },
                               child: const Text(
@@ -566,17 +576,18 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
       );
 
   void alertBanner(title, message, type, color) => Flushbar(
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         flushbarPosition: FlushbarPosition.TOP,
         icon: type == 'Success'
-            ? Icon(Icons.check_circle_rounded, size: 60, color: Colors.white)
-            : Icon(Icons.error_rounded, size: 60, color: Colors.white),
+            ? const Icon(Icons.check_circle_rounded,
+                size: 60, color: Colors.white)
+            : const Icon(Icons.error_rounded, size: 60, color: Colors.white),
         shouldIconPulse: false,
         title: title,
         message: message,
         borderRadius: BorderRadius.circular(25),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         backgroundColor: color,
         dismissDirection: FlushbarDismissDirection.VERTICAL,
       )..show(context);
@@ -594,6 +605,33 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
             )
             .toList(),
       );
+
+  editButtonClicked(String id) async {
+    final docTransaction =
+        FirebaseFirestore.instance.collection('Transactions').doc(id);
+    final docUser =
+        FirebaseFirestore.instance.collection('Users').doc(widget.user.id);
+    var transactionType = await docTransaction.get().then((value) {
+      return value.get('transactionType');
+    });
+    var balance = await docUser.get().then((value) {
+      return value.get('balance');
+    });
+    var amount = await docTransaction.get().then((value) {
+      return value.get('amount');
+    });
+    if (transactionType == 'Income') {
+      var oldbalance = balance - amount;
+      docUser.update({
+        'balance': oldbalance,
+      });
+    } else {
+      var oldbalance = balance + amount;
+      docUser.update({
+        'balance': oldbalance,
+      });
+    }
+  }
 
   Widget realtimeData(id, info, style) {
     return StreamBuilder(
@@ -662,6 +700,9 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
     var transaction = await docTransaction.get().then((value) {
       return value.get('transactionType');
     });
+    var category = await docTransaction.get().then((value) {
+      return value.get('category');
+    });
     var totalIncome = await docUser.get().then((value) {
       return value.get('totalIncome');
     });
@@ -671,12 +712,38 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
     var balance = await docUser.get().then((value) {
       return value.get('balance');
     });
+    var cat1 = await docUser.get().then((value) {
+      return value.get('cat1');
+    });
+    var cat2 = await docUser.get().then((value) {
+      return value.get('cat2');
+    });
+    var cat3 = await docUser.get().then((value) {
+      return value.get('cat3');
+    });
+    var cat4 = await docUser.get().then((value) {
+      return value.get('cat4');
+    });
+    var cat5 = await docUser.get().then((value) {
+      return value.get('cat5');
+    });
+
+    if (category == 'Entertainment') {
+      widget.cat1 = cat1 - amount;
+    } else if (category == 'Social & Lifestyle') {
+      widget.cat2 = cat2 - amount;
+    } else if (category == 'Beauty & Health') {
+      widget.cat3 = cat3 - amount;
+    } else if (category == 'Work & Education') {
+      widget.cat4 = cat4 - amount;
+    } else if (category == 'Others') {
+      widget.cat5 = cat5 - amount;
+    }
 
     widget.totalIncomeData =
         transaction == 'Income' ? totalIncome - amount : totalIncome;
     widget.totalExpenseData =
         transaction == 'Expense' ? totalExpenses - amount : totalExpenses;
-
     widget.balance =
         transaction == 'Income' ? balance - amount : balance + amount;
 
@@ -684,6 +751,11 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
       'totalIncome': widget.totalIncomeData,
       'totalExpense': widget.totalExpenseData,
       'balance': widget.balance,
+      'cat1': widget.cat1,
+      'cat2': widget.cat2,
+      'cat3': widget.cat3,
+      'cat4': widget.cat4,
+      'cat5': widget.cat5,
     });
     docTransaction.delete();
   }

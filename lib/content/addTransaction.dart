@@ -140,13 +140,13 @@ class _AddTransactionState extends State<AddTransaction> {
                   height: 10,
                 ),
                 const Text(
-                  'Title :',
+                  'Description :',
                   style: labelTransactionStyle,
                 ),
                 RoundedInput(
-                  hint: 'Write your title here',
+                  hint: 'Write your description here',
                   color: mainDesignColor,
-                  formvalue: 'Enter Title',
+                  formvalue: 'Enter Description',
                   inputController: titlecontroller,
                   enabled: true,
                 ),
@@ -408,61 +408,54 @@ class _AddTransactionState extends State<AddTransaction> {
         'Error !!',
         'A type of transaction should be selected',
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else if (titlecontroller.text == '') {
       alertBanner(
         'Error !!',
-        "Title can't be empty",
+        "Description can't be empty",
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else if (category == '') {
       alertBanner(
         'Error !!',
         "A category should be selected",
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else if (amountcontroller.text == '') {
       alertBanner(
         'Error !!',
         "Amount can't be empty",
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else if (int.tryParse(amountcontroller.text) == null) {
       alertBanner(
         'Invalid Input !!',
         "Amount should be a number",
         'Error',
-        Color.fromARGB(255, 157, 37, 37),
+        const Color.fromARGB(255, 157, 37, 37),
       );
     } else {
-      createTransaction();
       editTransaction(widget.id);
-      Navigator.pop(context);
-      alertBanner(
-        'Success !!',
-        "Transaction Added",
-        'Success',
-        Color.fromARGB(255, 47, 101, 114),
-      );
     }
   }
 
   void alertBanner(title, message, type, color) => Flushbar(
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         flushbarPosition: FlushbarPosition.TOP,
         icon: type == 'Success'
-            ? Icon(Icons.check_circle_rounded, size: 60, color: Colors.white)
-            : Icon(Icons.error_rounded, size: 60, color: Colors.white),
+            ? const Icon(Icons.check_circle_rounded,
+                size: 60, color: Colors.white)
+            : const Icon(Icons.error_rounded, size: 60, color: Colors.white),
         shouldIconPulse: false,
         title: title,
         message: message,
         borderRadius: BorderRadius.circular(25),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         backgroundColor: color,
         dismissDirection: FlushbarDismissDirection.VERTICAL,
       )..show(context);
@@ -516,6 +509,21 @@ class _AddTransactionState extends State<AddTransaction> {
     var balance = await docUser.get().then((value) {
       return value.get('balance');
     });
+    var cat1 = await docUser.get().then((value) {
+      return value.get('cat1');
+    });
+    var cat2 = await docUser.get().then((value) {
+      return value.get('cat2');
+    });
+    var cat3 = await docUser.get().then((value) {
+      return value.get('cat3');
+    });
+    var cat4 = await docUser.get().then((value) {
+      return value.get('cat4');
+    });
+    var cat5 = await docUser.get().then((value) {
+      return value.get('cat5');
+    });
 
     widget.totalIncomeData = transaction == 'Income'
         ? int.parse(amountcontroller.text) + totalIncome
@@ -524,14 +532,88 @@ class _AddTransactionState extends State<AddTransaction> {
         ? int.parse(amountcontroller.text) + totalExpenses
         : totalExpenses;
 
-    widget.balance = transaction == 'Income'
-        ? balance + int.parse(amountcontroller.text)
-        : balance - int.parse(amountcontroller.text);
-
-    docUser.update({
-      'totalIncome': widget.totalIncomeData,
-      'totalExpense': widget.totalExpenseData,
-      'balance': widget.balance,
-    });
+    if (transaction == 'Income') {
+      widget.balance = balance + int.parse(amountcontroller.text);
+      createTransaction();
+      docUser.update({
+        'totalIncome': widget.totalIncomeData,
+        'totalExpense': widget.totalExpenseData,
+        'balance': widget.balance,
+      });
+      if (category == 'Entertainment') {
+        docUser.update({
+          'cat1': int.parse(amountcontroller.text) + cat1,
+        });
+      } else if (category == 'Social & Lifestyle') {
+        docUser.update({
+          'cat2': int.parse(amountcontroller.text) + cat2,
+        });
+      } else if (category == 'Beauty & Health') {
+        docUser.update({
+          'cat3': int.parse(amountcontroller.text) + cat3,
+        });
+      } else if (category == 'Work & Education') {
+        docUser.update({
+          'cat4': int.parse(amountcontroller.text) + cat4,
+        });
+      } else if (category == 'Others') {
+        docUser.update({
+          'cat5': int.parse(amountcontroller.text) + cat5,
+        });
+      }
+      Navigator.pop(context);
+      alertBanner(
+        'Success !!',
+        "Transaction Added",
+        'Success',
+        const Color.fromARGB(255, 47, 101, 114),
+      );
+    } else {
+      if (balance < int.parse(amountcontroller.text)) {
+        print(balance);
+        alertBanner(
+          'Error !!',
+          "Insufficient Balance",
+          'Error',
+          const Color.fromARGB(255, 157, 37, 37),
+        );
+      } else {
+        widget.balance = balance - int.parse(amountcontroller.text);
+        createTransaction();
+        docUser.update({
+          'totalIncome': widget.totalIncomeData,
+          'totalExpense': widget.totalExpenseData,
+          'balance': widget.balance,
+        });
+        if (category == 'Entertainment') {
+          docUser.update({
+            'cat1': int.parse(amountcontroller.text) + cat1,
+          });
+        } else if (category == 'Social & Lifestyle') {
+          docUser.update({
+            'cat2': int.parse(amountcontroller.text) + cat2,
+          });
+        } else if (category == 'Beauty & Health') {
+          docUser.update({
+            'cat3': int.parse(amountcontroller.text) + cat3,
+          });
+        } else if (category == 'Work & Education') {
+          docUser.update({
+            'cat4': int.parse(amountcontroller.text) + cat4,
+          });
+        } else if (category == 'Others') {
+          docUser.update({
+            'cat5': int.parse(amountcontroller.text) + cat5,
+          });
+        }
+        Navigator.pop(context);
+        alertBanner(
+          'Success !!',
+          "Transaction Added",
+          'Success',
+          const Color.fromARGB(255, 47, 101, 114),
+        );
+      }
+    }
   }
 }

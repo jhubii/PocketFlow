@@ -7,7 +7,6 @@ import 'package:PocketFlow/content/components/rounded_password_input.dart';
 import 'package:PocketFlow/datahandling/users.dart';
 import 'package:PocketFlow/design/colors.dart';
 import 'package:PocketFlow/design/style.dart';
-import 'package:PocketFlow/loginRegister/loginregisterComponents/input_container.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +30,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  late TextEditingController passwordcontroller;
+  late TextEditingController newpasswordcontroller;
+  late TextEditingController oldpasswordcontroller;
   late TextEditingController fnamecontroller;
   late TextEditingController lnamecontroller;
   late String error;
@@ -41,8 +41,8 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-
-    passwordcontroller = TextEditingController(text: widget.user.password);
+    oldpasswordcontroller = TextEditingController();
+    newpasswordcontroller = TextEditingController();
     fnamecontroller = TextEditingController(text: widget.user.firstname);
     lnamecontroller = TextEditingController(text: widget.user.lastname);
     error = "";
@@ -50,7 +50,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   void dispose() {
-    passwordcontroller.dispose();
+    oldpasswordcontroller.dispose();
+    newpasswordcontroller.dispose();
     fnamecontroller.dispose();
     lnamecontroller.dispose();
     super.dispose();
@@ -216,60 +217,6 @@ class _ProfileState extends State<Profile> {
                     ),
                     ListTile(
                       leading: const Icon(
-                        Icons.lock_person_rounded,
-                        size: 40,
-                        color: mainDesignColor,
-                      ),
-                      title: Text(
-                        widget.showpass
-                            ? user.password
-                            : user.password.replaceAll(RegExp(r"."), "*"),
-                        style: mainStyle,
-                      ),
-                      subtitle: const Text(
-                        'Password',
-                        style: labelStyle,
-                      ),
-                      dense: true,
-                      trailing: Wrap(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                widget.showpass = !widget.showpass;
-                              });
-                            },
-                            icon: widget.showpass
-                                ? const Icon(
-                                    Icons.visibility_off,
-                                    color: mainDesignColor,
-                                  )
-                                : const Icon(
-                                    Icons.visibility,
-                                    color: mainDesignColor,
-                                  ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              popUpPassword(
-                                'Password',
-                                passwordcontroller,
-                                user,
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: mainDesignColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Divider(
-                      color: Colors.grey,
-                    ),
-                    ListTile(
-                      leading: const Icon(
                         Icons.face_rounded,
                         size: 40,
                         color: mainDesignColor,
@@ -324,16 +271,29 @@ class _ProfileState extends State<Profile> {
                       dense: true,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 20),
+                      padding:
+                          const EdgeInsets.only(right: 20, left: 10, top: 20),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(
                             onPressed: () {
-                              popUpConfirmationDelete(user.id);
+                              popUpPassword('Password', user);
                             },
                             child: const Text(
-                              'Delete Account',
+                              'Change Password',
+                              style: TextStyle(
+                                color: mainDesignColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              popUpConfirmationReset(user.id);
+                            },
+                            child: const Text(
+                              'Reset Data',
                               style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -353,7 +313,7 @@ class _ProfileState extends State<Profile> {
                   color: mainDesignColor,
                   textColor: whiteDesignColor,
                   onTapEvent: () {
-                    FirebaseAuth.instance.signOut();
+                    popUpLogoutConfirmation();
                   },
                 ),
                 const SizedBox(
@@ -635,9 +595,7 @@ class _ProfileState extends State<Profile> {
         ),
       );
 
-  popUpPassword(String editTitle, TextEditingController inputController,
-          Users user) =>
-      showDialog(
+  popUpPassword(String editTitle, Users user) => showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
@@ -650,7 +608,7 @@ class _ProfileState extends State<Profile> {
           contentPadding: const EdgeInsets.only(top: 0.0),
           content: Container(
             width: 200,
-            height: 220,
+            height: 340,
             child: Stack(
               children: [
                 Positioned(
@@ -689,14 +647,22 @@ class _ProfileState extends State<Profile> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 5),
                       Form(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         key: Profile.formKey,
-                        child: RoundedPasswordInput(
-                            hint: 'Enter new $editTitle',
-                            color: mainDesignColor,
-                            inputController: inputController),
+                        child: Column(
+                          children: [
+                            RoundedPasswordInput(
+                                hint: 'Enter current $editTitle',
+                                color: mainDesignColor,
+                                inputController: oldpasswordcontroller),
+                            RoundedPasswordInput(
+                                hint: 'Enter new $editTitle',
+                                color: mainDesignColor,
+                                inputController: newpasswordcontroller),
+                          ],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -707,13 +673,12 @@ class _ProfileState extends State<Profile> {
                                   Profile.formKey.currentState!.validate();
 
                               if (isValidForm) {
-                                Navigator.pop(context);
                                 popUpConfirmation(
-                                    editTitle, inputController, user.id);
+                                    editTitle, newpasswordcontroller, user.id);
                               }
                             },
                             child: const Text(
-                              'Save',
+                              'Submit',
                               style: TextStyle(
                                 color: mainDesignColor,
                                 fontSize: 17,
@@ -723,7 +688,8 @@ class _ProfileState extends State<Profile> {
                           TextButton(
                             onPressed: () {
                               setState(() {
-                                inputController.text = widget.user.password;
+                                newpasswordcontroller.text = '';
+                                oldpasswordcontroller.text = '';
                               });
                               Navigator.pop(context);
                             },
@@ -770,7 +736,7 @@ class _ProfileState extends State<Profile> {
                     height: 100,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(57, 232, 212, 145)),
+                        color: const Color.fromARGB(57, 232, 212, 145)),
                   ),
                 ),
                 Positioned(
@@ -781,7 +747,7 @@ class _ProfileState extends State<Profile> {
                     height: 60,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(98, 249, 220, 162)),
+                        color: const Color.fromARGB(98, 249, 220, 162)),
                   ),
                 ),
                 Padding(
@@ -796,9 +762,9 @@ class _ProfileState extends State<Profile> {
                         color: Color.fromARGB(255, 244, 158, 54),
                         size: 50,
                       )),
-                      Text(
+                      const Text(
                         "Are you sure you wan't to update your profile picture?",
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: mainDesignColor,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -812,6 +778,104 @@ class _ProfileState extends State<Profile> {
                             onPressed: () {
                               uploadFile();
                               Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'Yes',
+                              style: TextStyle(
+                                color: mainDesignColor,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              'No',
+                              style: TextStyle(
+                                color: mainDesignColor,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  popUpLogoutConfirmation() => showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+          clipBehavior: Clip.antiAlias,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(32.0),
+            ),
+          ),
+          contentPadding: const EdgeInsets.only(top: 0.0),
+          content: Container(
+            width: 100,
+            height: 200,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: -10,
+                  left: -10,
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(250),
+                        color: const Color.fromARGB(57, 244, 222, 150)),
+                  ),
+                ),
+                Positioned(
+                  top: 50,
+                  right: -20,
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(250),
+                        color: const Color.fromARGB(98, 238, 204, 137)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Center(
+                          child: FaIcon(
+                        FontAwesomeIcons.circleQuestion,
+                        color: Color.fromARGB(255, 244, 158, 54),
+                        size: 50,
+                      )),
+                      const Text(
+                        "Are you sure you wan't to Sign out?",
+                        style: TextStyle(
+                          color: mainDesignColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              FirebaseAuth.instance.signOut();
                             },
                             child: const Text(
                               'Yes',
@@ -870,7 +934,7 @@ class _ProfileState extends State<Profile> {
                     height: 100,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(57, 244, 222, 150)),
+                        color: const Color.fromARGB(57, 244, 222, 150)),
                   ),
                 ),
                 Positioned(
@@ -881,7 +945,7 @@ class _ProfileState extends State<Profile> {
                     height: 60,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(98, 238, 204, 137)),
+                        color: const Color.fromARGB(98, 238, 204, 137)),
                   ),
                 ),
                 Padding(
@@ -911,10 +975,10 @@ class _ProfileState extends State<Profile> {
                           TextButton(
                             onPressed: () {
                               if (editTitle == 'Password') {
-                                // changeAuthPassword(inputController.text);
-                                changeAuthPassword(
-                                    widget.user.password, inputController.text);
-                                updatePassword(id);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                changeAuthPassword(oldpasswordcontroller.text,
+                                    newpasswordcontroller.text);
                               } else if (editTitle == 'First Name') {
                                 updateFname(id);
                               } else if (editTitle == 'Last Name') {
@@ -955,7 +1019,7 @@ class _ProfileState extends State<Profile> {
         ),
       );
 
-  popUpConfirmationDelete(String id) => showDialog(
+  popUpConfirmationReset(String id) => showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
@@ -979,7 +1043,7 @@ class _ProfileState extends State<Profile> {
                     height: 180,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(75, 247, 212, 142)),
+                        color: const Color.fromARGB(75, 247, 212, 142)),
                   ),
                 ),
                 Positioned(
@@ -990,7 +1054,7 @@ class _ProfileState extends State<Profile> {
                     height: 100,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(250),
-                        color: Color.fromARGB(98, 249, 220, 161)),
+                        color: const Color.fromARGB(98, 249, 220, 161)),
                   ),
                 ),
                 Padding(
@@ -1005,7 +1069,7 @@ class _ProfileState extends State<Profile> {
                           size: 50,
                         ),
                         const Text(
-                          "Are you sure you wan't to delete your account? This process cannot be undone",
+                          "Are you sure you want to delete all Transactions? This process cannot be undone",
                           style: TextStyle(
                             color: mainDesignColor,
                             fontSize: 15,
@@ -1019,9 +1083,7 @@ class _ProfileState extends State<Profile> {
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
-                                deleteAuthUser();
-                                batchDelete(id);
-                                deleteUser(id);
+                                resetData(id);
                               },
                               child: const Text(
                                 'Yes',
@@ -1055,35 +1117,34 @@ class _ProfileState extends State<Profile> {
         ),
       );
 
-  showData(editTitle, inputController) {
+  showData(editTitle, TextEditingController inputController) {
     var collection = FirebaseFirestore.instance.collection('Users');
     collection.doc(widget.user.id).snapshots().listen((docSnapshot) {
       if (docSnapshot.exists) {
         Map<String, dynamic> data = docSnapshot.data()!;
 
         if (editTitle == 'First Name') {
-          inputController.text = data['firsname'];
+          inputController.text = data['firstname'];
         } else if (editTitle == 'Last Name') {
           inputController.text = data['lastname'];
-        } else {
-          inputController.text = data['password'];
         }
       }
     });
   }
 
   void alertBanner(title, message, type, color) => Flushbar(
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         flushbarPosition: FlushbarPosition.TOP,
         icon: type == 'Success'
-            ? Icon(Icons.check_circle_rounded, size: 60, color: Colors.white)
-            : Icon(Icons.error_rounded, size: 60, color: Colors.white),
+            ? const Icon(Icons.check_circle_rounded,
+                size: 60, color: Colors.white)
+            : const Icon(Icons.error_rounded, size: 60, color: Colors.white),
         shouldIconPulse: false,
         title: title,
         message: message,
         borderRadius: BorderRadius.circular(25),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         backgroundColor: color,
         dismissDirection: FlushbarDismissDirection.VERTICAL,
       )..show(context);
@@ -1194,7 +1255,7 @@ class _ProfileState extends State<Profile> {
       'Success !!',
       "Firstname has been updated",
       'Success',
-      Color.fromARGB(255, 47, 101, 114),
+      const Color.fromARGB(255, 47, 101, 114),
     );
   }
 
@@ -1209,7 +1270,7 @@ class _ProfileState extends State<Profile> {
       'Success !!',
       "Lastname has been updated",
       'Success',
-      Color.fromARGB(255, 47, 101, 114),
+      const Color.fromARGB(255, 47, 101, 114),
     );
   }
 
@@ -1233,7 +1294,7 @@ class _ProfileState extends State<Profile> {
   updatePassword(String id) {
     final docUser = FirebaseFirestore.instance.collection('Users').doc(id);
     docUser.update({
-      'password': passwordcontroller.text,
+      'password': newpasswordcontroller.text,
     });
   }
 
@@ -1244,45 +1305,49 @@ class _ProfileState extends State<Profile> {
 
     user.reauthenticateWithCredential(cred).then((value) {
       user.updatePassword(newPassword).then((_) {
-        Navigator.pop(context);
+        updatePassword(user.uid);
         user.reload();
         FirebaseAuth.instance.signOut();
         alertBanner(
           'Success !!',
           "Password has been updated",
           'Success',
-          Color.fromARGB(255, 47, 101, 114),
+          const Color.fromARGB(255, 47, 101, 114),
         );
       }).catchError((error) {
         alertBanner(
           'Error !!',
           error,
           'Error',
-          Color.fromARGB(255, 47, 101, 114),
+          const Color.fromARGB(255, 157, 37, 37),
         );
       });
-    }).catchError((err) {});
-  }
-
-  deleteUser(String id) {
-    final docUser = FirebaseFirestore.instance.collection('Users').doc(id);
-    docUser.delete();
-  }
-
-  deleteAuthUser() {
-    final currentUser = FirebaseAuth.instance.currentUser!;
-    try {
-      currentUser.delete();
-      FirebaseAuth.instance.signOut();
+    }).catchError((err) {
+      Navigator.pop(context);
       alertBanner(
-        'Success !!',
-        "Account has been updated",
-        'Success',
-        Color.fromARGB(255, 47, 101, 114),
+        'Error !!',
+        err.toString(),
+        'Error',
+        const Color.fromARGB(255, 157, 37, 37),
       );
-    } catch (e) {
-      print(e);
-    }
+    });
+  }
+
+  resetData(String id) async {
+    batchDelete(id);
+    final docUser =
+        FirebaseFirestore.instance.collection('Users').doc(widget.user.id);
+
+    docUser.update({
+      'totalIncome': 0,
+      'totalExpense': 0,
+      'balance': 0,
+      'cat1': 0,
+      'cat2': 0,
+      'cat3': 0,
+      'cat4': 0,
+      'cat5': 0,
+    });
   }
 
   Future<void> batchDelete(id) {
@@ -1293,6 +1358,12 @@ class _ProfileState extends State<Profile> {
     return transactions.get().then((querySnapshot) {
       querySnapshot.docs.forEach((document) {
         batch.delete(document.reference);
+        alertBanner(
+          'Success !!',
+          "Data has been Reset",
+          'Success',
+          const Color.fromARGB(255, 47, 101, 114),
+        );
       });
       return batch.commit();
     });
@@ -1309,7 +1380,7 @@ class _ProfileState extends State<Profile> {
       'Success !!',
       "Profile picture has been updated",
       'Success',
-      Color.fromARGB(255, 47, 101, 114),
+      const Color.fromARGB(255, 47, 101, 114),
     );
   }
 }

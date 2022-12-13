@@ -13,6 +13,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -61,9 +62,10 @@ class _HomeState extends State<Home> {
                 ? const Center(child: Text('No User'))
                 : screens(user)[_selectedIndex];
           } else {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: mainDesignColor,
+            return Center(
+              child: LoadingAnimationWidget.threeArchedCircle(
+                color: Color.fromARGB(255, 40, 159, 182),
+                size: 70,
               ),
             );
           }
@@ -408,9 +410,10 @@ class _HomeState extends State<Home> {
             order: GroupedListOrder.DESC,
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: mainDesignColor,
+          return Center(
+            child: LoadingAnimationWidget.threeArchedCircle(
+              color: Color.fromARGB(255, 40, 159, 182),
+              size: 70,
             ),
           );
         }
@@ -527,7 +530,7 @@ class _HomeState extends State<Home> {
   Widget imgNotExist() => const Icon(
         Icons.person,
         color: whiteDesignColor,
-        size: 12,
+        size: 30,
       );
 
   Widget realtimeDataImage(id, info) {
@@ -553,7 +556,10 @@ class _HomeState extends State<Home> {
           FirebaseFirestore.instance.collection('Users').doc(id).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Text("Loading");
+          return LoadingAnimationWidget.threeArchedCircle(
+            color: Color.fromARGB(255, 40, 159, 182),
+            size: 20,
+          );
         }
         var userDocument = snapshot.data;
         return FittedBox(

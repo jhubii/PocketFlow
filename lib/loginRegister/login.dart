@@ -64,14 +64,13 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
             left: -60,
             child: Container(
               width: 200,
-              height: 180,
+              height: 200,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   gradient: gradientDesignColor),
             ),
           ),
 
-          // Cancel Button
           CancelButton(
             isLogin: isLogin,
             animationDuration: animationDuration,

@@ -8,6 +8,11 @@ class Users {
   final int balance;
   final int totalIncome;
   final int totalExpense;
+  final int cat1;
+  final int cat2;
+  final int cat3;
+  final int cat4;
+  final int cat5;
 
   Users({
     required this.id,
@@ -19,6 +24,11 @@ class Users {
     required this.balance,
     required this.totalExpense,
     required this.totalIncome,
+    required this.cat1,
+    required this.cat2,
+    required this.cat3,
+    required this.cat4,
+    required this.cat5,
   });
 
   Map<String, dynamic> toJson() => {
@@ -31,6 +41,11 @@ class Users {
         'balance': balance,
         'totalExpense': totalExpense,
         'totalIncome': totalIncome,
+        'cat1': cat1,
+        'cat2': cat2,
+        'cat3': cat3,
+        'cat4': cat4,
+        'cat5': cat5,
       };
 
   static Users fromJson(Map<String, dynamic> json) => Users(
@@ -43,5 +58,10 @@ class Users {
         balance: json['balance'],
         totalExpense: json['totalExpense'],
         totalIncome: json['totalIncome'],
+        cat1: json['cat1'],
+        cat2: json['cat2'],
+        cat3: json['cat3'],
+        cat4: json['cat4'],
+        cat5: json['cat5'],
       );
 }

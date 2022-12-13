@@ -42,7 +42,7 @@ class _RoundedPasswordInputState extends State<RoundedPasswordInput> {
         style: TextStyle(color: widget.color),
         decoration: InputDecoration(
           hintText: widget.hint,
-          hintStyle: TextStyle(color: widget.color),
+          hintStyle: TextStyle(color: widget.color, fontSize: 15),
           filled: true,
           fillColor: textFieldColor.withAlpha(50),
           contentPadding: const EdgeInsets.only(left: 15, top: 20, bottom: 15),

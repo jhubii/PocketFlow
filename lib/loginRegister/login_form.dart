@@ -1,10 +1,12 @@
 import 'package:PocketFlow/design/colors.dart';
+import 'package:PocketFlow/loginRegister/forgotPassword.dart';
 import 'package:PocketFlow/loginRegister/loginregisterComponents/rounded_button.dart';
 import 'package:PocketFlow/loginRegister/loginregisterComponents/rounded_input.dart';
 import 'package:PocketFlow/loginRegister/loginregisterComponents/rounded_password_input.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
@@ -125,9 +127,16 @@ class _LoginFormState extends State<LoginForm> {
                     },
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ForgotPassword(),
+                        ),
+                      );
+                    },
                     child: const Text(
-                      'forgot password?',
+                      'Forgot Password?',
                       style: TextStyle(
                         color: mainDesignColor,
                         fontWeight: FontWeight.bold,
@@ -144,72 +153,61 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void alertBanner(title, message, type, color) => Flushbar(
-        duration: Duration(seconds: 3),
+        duration: const Duration(seconds: 3),
         flushbarPosition: FlushbarPosition.TOP,
         icon: type == 'Success'
-            ? Icon(Icons.check_circle_rounded, size: 60, color: Colors.white)
-            : Icon(Icons.error_rounded, size: 60, color: Colors.white),
+            ? const Icon(Icons.check_circle_rounded,
+                size: 60, color: Colors.white)
+            : const Icon(Icons.error_rounded, size: 60, color: Colors.white),
         shouldIconPulse: false,
         title: title,
         message: message,
         borderRadius: BorderRadius.circular(25),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         backgroundColor: color,
         dismissDirection: FlushbarDismissDirection.VERTICAL,
       )..show(context);
-
-  // void alertBanner(message) => Flushbar(
-  //       duration: Duration(seconds: 4),
-  //       flushbarPosition: FlushbarPosition.TOP,
-  //       icon: Icon(Icons.error_rounded, size: 60, color: Colors.white),
-  //       shouldIconPulse: false,
-  //       title: 'Error !!',
-  //       message: message,
-  //       borderRadius: BorderRadius.circular(25),
-  //       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-  //       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-  //       backgroundColor: Color.fromARGB(255, 157, 37, 37),
-  //       dismissDirection: FlushbarDismissDirection.VERTICAL,
-  //     )..show(context);
 
   Future signIn() async {
     showDialog(
       context: context,
       useRootNavigator: false,
       barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(color: mainDesignColor),
+      builder: (context) => Center(
+        child: LoadingAnimationWidget.threeArchedCircle(
+          color: const Color.fromARGB(255, 40, 159, 182),
+          size: 70,
+        ),
       ),
     );
+    Navigator.of(context).pop();
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailcontroller.text.trim(),
         password: passwordcontroller.text.trim(),
       );
+      if (FirebaseAuth.instance.currentUser!.emailVerified) {
+        alertBanner(
+          'Success !!',
+          "Logged in successfully",
+          'Success',
+          const Color.fromARGB(255, 47, 101, 114),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       print(e);
 
       setState(() {
         error = e.message.toString();
+        alertBanner(
+          'Error !!',
+          error,
+          'Error',
+          const Color.fromARGB(255, 157, 37, 37),
+        );
       });
-    }
-    // Navigator.pop(context);
-    if (error != '') {
-      alertBanner(
-        'Error !!',
-        error,
-        'Error',
-        Color.fromARGB(255, 157, 37, 37),
-      );
-    } else {
-      alertBanner(
-        'Success !!',
-        "Logged in successfully",
-        'Success',
-        Color.fromARGB(255, 47, 101, 114),
-      );
     }
   }
 }
