@@ -570,7 +570,6 @@ class _AddTransactionState extends State<AddTransaction> {
       );
     } else {
       if (balance < double.parse(amountcontroller.text)) {
-        print(balance);
         alertBanner(
           'Error !!',
           "Insufficient Balance",
