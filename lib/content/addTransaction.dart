@@ -578,6 +578,8 @@ class _AddTransactionState extends State<AddTransaction> {
           const Color.fromARGB(255, 157, 37, 37),
         );
       } else {
+        Navigator.pop(context);
+        Navigator.pop(context);
         widget.balance = balance - double.parse(amountcontroller.text);
         createTransaction();
         docUser.update({
@@ -606,7 +608,7 @@ class _AddTransactionState extends State<AddTransaction> {
             'cat5': double.parse(amountcontroller.text) + cat5,
           });
         }
-        Navigator.pop(context);
+
         alertBanner(
           'Success !!',
           "Transaction Added",

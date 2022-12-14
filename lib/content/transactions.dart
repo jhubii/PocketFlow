@@ -777,14 +777,34 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
 
     if (category == 'Entertainment') {
       widget.cat1 = cat1 - amount;
+      widget.cat2 = cat2;
+      widget.cat3 = cat3;
+      widget.cat4 = cat4;
+      widget.cat5 = cat5;
     } else if (category == 'Social & Lifestyle') {
       widget.cat2 = cat2 - amount;
+      widget.cat1 = cat1;
+      widget.cat3 = cat3;
+      widget.cat4 = cat4;
+      widget.cat5 = cat5;
     } else if (category == 'Beauty & Health') {
       widget.cat3 = cat3 - amount;
+      widget.cat2 = cat2;
+      widget.cat1 = cat1;
+      widget.cat4 = cat4;
+      widget.cat5 = cat5;
     } else if (category == 'Work & Education') {
       widget.cat4 = cat4 - amount;
+      widget.cat2 = cat2;
+      widget.cat3 = cat3;
+      widget.cat1 = cat1;
+      widget.cat5 = cat5;
     } else if (category == 'Others') {
       widget.cat5 = cat5 - amount;
+      widget.cat2 = cat2;
+      widget.cat3 = cat3;
+      widget.cat4 = cat4;
+      widget.cat1 = cat1;
     }
 
     widget.totalIncomeData =
