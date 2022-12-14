@@ -233,14 +233,14 @@ class _RegisterFormState extends State<RegisterForm> {
       firstname: firstnamecontroller.text,
       lastname: lastnamecontroller.text,
       image: '-',
-      balance: 0,
-      totalExpense: 0,
-      totalIncome: 0,
-      cat1: 0,
-      cat2: 0,
-      cat3: 0,
-      cat4: 0,
-      cat5: 0,
+      balance: 0.00,
+      totalExpense: 0.00,
+      totalIncome: 0.00,
+      cat1: 0.00,
+      cat2: 0.00,
+      cat3: 0.00,
+      cat4: 0.00,
+      cat5: 0.00,
     );
 
     final json = newUser.toJson();

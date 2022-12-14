@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
           } else {
             return Center(
               child: LoadingAnimationWidget.threeArchedCircle(
-                color: Color.fromARGB(255, 40, 159, 182),
+                color: const Color.fromARGB(255, 40, 159, 182),
                 size: 70,
               ),
             );
@@ -412,7 +412,7 @@ class _HomeState extends State<Home> {
         } else {
           return Center(
             child: LoadingAnimationWidget.threeArchedCircle(
-              color: Color.fromARGB(255, 40, 159, 182),
+              color: const Color.fromARGB(255, 40, 159, 182),
               size: 70,
             ),
           );
@@ -455,8 +455,8 @@ class _HomeState extends State<Home> {
             children: [
               Text(
                 transactions.transactionType == 'Expense'
-                    ? '- ₱${widget.value.format(int.parse(transactions.amount.toString()))}'
-                    : '+ ₱${widget.value.format(int.parse(transactions.amount.toString()))}',
+                    ? '- ₱${widget.value.format(double.parse(transactions.amount.toString()))}'
+                    : '+ ₱${widget.value.format(double.parse(transactions.amount.toString()))}',
                 style: const TextStyle(
                   color: mainDesignColor,
                   fontSize: 15,
@@ -557,7 +557,7 @@ class _HomeState extends State<Home> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return LoadingAnimationWidget.threeArchedCircle(
-            color: Color.fromARGB(255, 40, 159, 182),
+            color: const Color.fromARGB(255, 40, 159, 182),
             size: 20,
           );
         }
@@ -565,7 +565,7 @@ class _HomeState extends State<Home> {
         return FittedBox(
           fit: BoxFit.cover,
           child: Text(
-              widget.value.format(int.parse(userDocument![info].toString())),
+              widget.value.format(double.parse(userDocument![info].toString())),
               style: style),
         );
       },

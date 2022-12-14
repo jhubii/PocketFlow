@@ -39,29 +39,24 @@ dependencies:
   google_fonts: ^3.0.1
   font_awesome_flutter: ^10.2.1
   intl: ^0.17.0
-  currency_icons: ^0.3.0
   firebase_core: ^2.2.0
   cloud_firestore: ^4.0.1
   firebase_auth: ^4.1.3
   charts_flutter: ^0.12.0
   google_nav_bar: ^5.0.6
   fl_chart: ^0.55.2
-  restart_app: ^1.1.1
   grouped_list: ^5.1.2
   firebase_storage: ^11.0.6
   file_picker: ^5.2.3
   another_flushbar: ^1.12.29
-  search_widget: ^1.0.2
-  anim_search_bar: ^2.0.2
-  flutter_keyboard_visibility: ^0.7.0
   loading_animation_widget: ^1.2.0+3
   flutter_native_splash: ^2.2.16
   flutter_launcher_icons: ^0.11.0
   email_validator: ^2.1.17
   
 flutter_native_splash:
-  color: "#f6f6f6"
-  image: "assets/images/boxlogobold.png"
+  background_image: "assets/images/splashbackground.png"
+  image: "assets/images/splashlogo.png"
 
 flutter_icons:
   android: true

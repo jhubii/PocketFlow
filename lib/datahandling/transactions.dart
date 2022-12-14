@@ -8,7 +8,7 @@ class Transactions {
   final String transactionType;
   final Timestamp transactionDate;
   final Timestamp dateAdded;
-  final int amount;
+  final double amount;
 
   Transactions({
     required this.id,

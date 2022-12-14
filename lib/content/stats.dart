@@ -296,7 +296,8 @@ class _StatsState extends State<Stats> {
           return FittedBox(
             fit: BoxFit.cover,
             child: Text(
-                widget.value.format(int.parse(userDocument![info].toString())),
+                widget.value
+                    .format(double.parse(userDocument![info].toString())),
                 style: style),
           );
         });

@@ -122,14 +122,14 @@ class _PieChartCategoryState extends State<PieChartCategory> {
           return const Text("Loading");
         }
         var transactionDocument = snapshot.data;
-        int income = transactionDocument!['totalIncome'];
-        int expense = transactionDocument['totalExpense'];
-        int cat1 = transactionDocument['cat1'];
-        int cat2 = transactionDocument['cat2'];
-        int cat3 = transactionDocument['cat3'];
-        int cat4 = transactionDocument['cat4'];
-        int cat5 = transactionDocument['cat5'];
-        int totalMoneyFlow = income + expense;
+        double income = transactionDocument!['totalIncome'];
+        double expense = transactionDocument['totalExpense'];
+        double cat1 = transactionDocument['cat1'];
+        double cat2 = transactionDocument['cat2'];
+        double cat3 = transactionDocument['cat3'];
+        double cat4 = transactionDocument['cat4'];
+        double cat5 = transactionDocument['cat5'];
+        double totalMoneyFlow = income + expense;
         double cat1percent = (cat1 / totalMoneyFlow) * 100;
         double cat2percent = (cat2 / totalMoneyFlow) * 100;
         double cat3percent = (cat3 / totalMoneyFlow) * 100;

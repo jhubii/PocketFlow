@@ -5,14 +5,14 @@ class Users {
   final String email;
   final String password;
   final String image;
-  final int balance;
-  final int totalIncome;
-  final int totalExpense;
-  final int cat1;
-  final int cat2;
-  final int cat3;
-  final int cat4;
-  final int cat5;
+  final double balance;
+  final double totalIncome;
+  final double totalExpense;
+  final double cat1;
+  final double cat2;
+  final double cat3;
+  final double cat4;
+  final double cat5;
 
   Users({
     required this.id,

@@ -1,4 +1,3 @@
-import 'package:PocketFlow/content/home.dart';
 import 'package:PocketFlow/design/colors.dart';
 import 'package:PocketFlow/loginRegister/login.dart';
 import 'package:PocketFlow/loginRegister/verifyEmail.dart';

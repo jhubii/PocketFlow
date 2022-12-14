@@ -8,13 +8,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.9"
-  anim_search_bar:
-    dependency: "direct main"
-    description:
-      name: anim_search_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
   another_flushbar:
     dependency: "direct main"
     description:
@@ -148,13 +141,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  currency_icons:
-    dependency: "direct main"
-    description:
-      name: currency_icons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0"
   email_validator:
     dependency: "direct main"
     description:
@@ -272,13 +258,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_keyboard_visibility:
-    dependency: "direct main"
-    description:
-      name: flutter_keyboard_visibility
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -527,20 +506,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
-  restart_app:
-    dependency: "direct main"
-    description:
-      name: restart_app
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
-  search_widget:
-    dependency: "direct main"
-    description:
-      name: search_widget
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   sky_engine:
     dependency: transitive
     description: flutter

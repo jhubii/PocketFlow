@@ -1339,14 +1339,14 @@ class _ProfileState extends State<Profile> {
         FirebaseFirestore.instance.collection('Users').doc(widget.user.id);
 
     docUser.update({
-      'totalIncome': 0,
-      'totalExpense': 0,
-      'balance': 0,
-      'cat1': 0,
-      'cat2': 0,
-      'cat3': 0,
-      'cat4': 0,
-      'cat5': 0,
+      'totalIncome': 0.00,
+      'totalExpense': 0.00,
+      'balance': 0.00,
+      'cat1': 0.00,
+      'cat2': 0.00,
+      'cat3': 0.00,
+      'cat4': 0.00,
+      'cat5': 0.00,
     });
   }
 

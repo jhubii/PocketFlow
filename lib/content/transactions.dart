@@ -22,14 +22,14 @@ class DisplayTransactions extends StatefulWidget {
   Users user;
   final value = NumberFormat("#,##0.00", "en_US");
   bool enabled = false;
-  int totalIncomeData = 0;
-  int totalExpenseData = 0;
-  int balance = 0;
-  int cat1 = 0;
-  int cat2 = 0;
-  int cat3 = 0;
-  int cat4 = 0;
-  int cat5 = 0;
+  double totalIncomeData = 0;
+  double totalExpenseData = 0;
+  double balance = 0;
+  double cat1 = 0;
+  double cat2 = 0;
+  double cat3 = 0;
+  double cat4 = 0;
+  double cat5 = 0;
 
   @override
   State<DisplayTransactions> createState() => _DisplayTransactionsState();
@@ -711,7 +711,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
           var transactionDocument = snapshot.data;
           return Text(
               widget.value
-                  .format(int.parse(transactionDocument![info].toString())),
+                  .format(double.parse(transactionDocument![info].toString())),
               style: style);
         });
   }

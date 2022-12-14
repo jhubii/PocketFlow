@@ -19,22 +19,22 @@ class EditTransaction extends StatefulWidget {
 
   Transactions transactions;
   Users user;
-  int oldtotalIncomeData = 0;
-  int oldtotalExpenseData = 0;
-  int oldbalance = 0;
-  int totalIncomeData = 0;
-  int totalExpenseData = 0;
-  int balance = 0;
-  int oldcat1 = 0;
-  int oldcat2 = 0;
-  int oldcat3 = 0;
-  int oldcat4 = 0;
-  int oldcat5 = 0;
-  int newcat1 = 0;
-  int newcat2 = 0;
-  int newcat3 = 0;
-  int newcat4 = 0;
-  int newcat5 = 0;
+  double oldtotalIncomeData = 0;
+  double oldtotalExpenseData = 0;
+  double oldbalance = 0;
+  double totalIncomeData = 0;
+  double totalExpenseData = 0;
+  double balance = 0;
+  double oldcat1 = 0;
+  double oldcat2 = 0;
+  double oldcat3 = 0;
+  double oldcat4 = 0;
+  double oldcat5 = 0;
+  double newcat1 = 0;
+  double newcat2 = 0;
+  double newcat3 = 0;
+  double newcat4 = 0;
+  double newcat5 = 0;
   final value = NumberFormat("#,##0.00", "en_US");
 
   @override
@@ -624,7 +624,7 @@ class _EditTransactionState extends State<EditTransaction> {
         'Error',
         const Color.fromARGB(255, 157, 37, 37),
       );
-    } else if (int.tryParse(amountcontroller.text) == null) {
+    } else if (double.tryParse(amountcontroller.text) == null) {
       alertBanner(
         'Invalid Input !!',
         "Amount should be a number",
@@ -664,7 +664,7 @@ class _EditTransactionState extends State<EditTransaction> {
           var transactionDocument = snapshot.data;
           return Text(
               widget.value
-                  .format(int.parse(transactionDocument![info].toString())),
+                  .format(double.parse(transactionDocument![info].toString())),
               style: style);
         });
   }
@@ -691,7 +691,7 @@ class _EditTransactionState extends State<EditTransaction> {
       'title': titlecontroller.text,
       'transactionType': transaction,
       'category': category,
-      'amount': int.parse(amountcontroller.text),
+      'amount': double.parse(amountcontroller.text),
       'transactionDate': Timestamp.fromDate(transactionDate),
     });
   }
@@ -716,19 +716,19 @@ class _EditTransactionState extends State<EditTransaction> {
     var oldamount = await docTransaction.get().then((value) {
       return value.get('amount');
     });
-    int cat1 = await docUser.get().then((value) {
+    double cat1 = await docUser.get().then((value) {
       return value.get('cat1');
     });
-    int cat2 = await docUser.get().then((value) {
+    double cat2 = await docUser.get().then((value) {
       return value.get('cat2');
     });
-    int cat3 = await docUser.get().then((value) {
+    double cat3 = await docUser.get().then((value) {
       return value.get('cat3');
     });
-    int cat4 = await docUser.get().then((value) {
+    double cat4 = await docUser.get().then((value) {
       return value.get('cat4');
     });
-    int cat5 = await docUser.get().then((value) {
+    double cat5 = await docUser.get().then((value) {
       return value.get('cat5');
     });
 
@@ -760,31 +760,36 @@ class _EditTransactionState extends State<EditTransaction> {
     }
 
     if (category == 'Entertainment') {
-      widget.newcat1 = int.parse(amountcontroller.text) + widget.oldcat1 + cat1;
+      widget.newcat1 =
+          double.parse(amountcontroller.text) + widget.oldcat1 + cat1;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Social & Lifestyle') {
-      widget.newcat2 = int.parse(amountcontroller.text) + widget.oldcat2 + cat2;
+      widget.newcat2 =
+          double.parse(amountcontroller.text) + widget.oldcat2 + cat2;
       widget.newcat1 = widget.oldcat1;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Beauty & Health') {
-      widget.newcat3 = int.parse(amountcontroller.text) + widget.oldcat3 + cat3;
+      widget.newcat3 =
+          double.parse(amountcontroller.text) + widget.oldcat3 + cat3;
       widget.newcat2 = widget.oldcat2;
       widget.newcat1 = widget.oldcat1;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Work & Education') {
-      widget.newcat4 = int.parse(amountcontroller.text) + widget.oldcat4 + cat4;
+      widget.newcat4 =
+          double.parse(amountcontroller.text) + widget.oldcat4 + cat4;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat1 = widget.oldcat1;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Others') {
-      widget.newcat5 = int.parse(amountcontroller.text) + widget.oldcat5 + cat5;
+      widget.newcat5 =
+          double.parse(amountcontroller.text) + widget.oldcat5 + cat5;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
@@ -798,13 +803,13 @@ class _EditTransactionState extends State<EditTransaction> {
     widget.oldbalance = balance;
 
     widget.totalIncomeData = transaction == 'Income'
-        ? int.parse(amountcontroller.text) + widget.oldtotalIncomeData
+        ? double.parse(amountcontroller.text) + widget.oldtotalIncomeData
         : widget.oldtotalIncomeData;
     widget.totalExpenseData = transaction == 'Expense'
-        ? int.parse(amountcontroller.text) + widget.oldtotalExpenseData
+        ? double.parse(amountcontroller.text) + widget.oldtotalExpenseData
         : widget.oldtotalExpenseData;
 
-    var amountcondition = balance + int.parse(amountcontroller.text);
+    var amountcondition = balance + double.parse(amountcontroller.text);
     if (transaction == 'Income') {
       if (amountcondition < widget.totalExpenseData) {
         alertBanner(
@@ -815,10 +820,11 @@ class _EditTransactionState extends State<EditTransaction> {
         );
       } else {
         popUpConfirmation();
-        widget.balance = widget.oldbalance + int.parse(amountcontroller.text);
+        widget.balance =
+            widget.oldbalance + double.parse(amountcontroller.text);
       }
     } else {
-      if (balance < int.parse(amountcontroller.text)) {
+      if (balance < double.parse(amountcontroller.text)) {
         alertBanner(
           'Error !!',
           "Insufficient Balance",
@@ -827,7 +833,8 @@ class _EditTransactionState extends State<EditTransaction> {
         );
       } else {
         popUpConfirmation();
-        widget.balance = widget.oldbalance - int.parse(amountcontroller.text);
+        widget.balance =
+            widget.oldbalance - double.parse(amountcontroller.text);
       }
     }
   }

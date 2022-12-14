@@ -17,9 +17,9 @@ class AddTransaction extends StatefulWidget {
   });
 
   String id;
-  int totalIncomeData = 0;
-  int totalExpenseData = 0;
-  int balance = 0;
+  double totalIncomeData = 0;
+  double totalExpenseData = 0;
+  double balance = 0;
   final value = NumberFormat("#,##0.00", "en_US");
 
   @override
@@ -431,7 +431,7 @@ class _AddTransactionState extends State<AddTransaction> {
         'Error',
         const Color.fromARGB(255, 157, 37, 37),
       );
-    } else if (int.tryParse(amountcontroller.text) == null) {
+    } else if (double.tryParse(amountcontroller.text) == null) {
       alertBanner(
         'Invalid Input !!',
         "Amount should be a number",
@@ -471,7 +471,7 @@ class _AddTransactionState extends State<AddTransaction> {
           var transactionDocument = snapshot.data;
           return Text(
               widget.value
-                  .format(int.parse(transactionDocument![info].toString())),
+                  .format(double.parse(transactionDocument![info].toString())),
               style: style);
         });
   }
@@ -490,7 +490,7 @@ class _AddTransactionState extends State<AddTransaction> {
       transactionType: transaction,
       transactionDate: Timestamp.fromDate(transactionDate),
       dateAdded: Timestamp.fromDate(now),
-      amount: int.parse(amountcontroller.text),
+      amount: double.parse(amountcontroller.text),
     );
 
     final json = newTransaction.toJson();
@@ -526,14 +526,14 @@ class _AddTransactionState extends State<AddTransaction> {
     });
 
     widget.totalIncomeData = transaction == 'Income'
-        ? int.parse(amountcontroller.text) + totalIncome
+        ? double.parse(amountcontroller.text) + totalIncome
         : totalIncome;
     widget.totalExpenseData = transaction == 'Expense'
-        ? int.parse(amountcontroller.text) + totalExpenses
+        ? double.parse(amountcontroller.text) + totalExpenses
         : totalExpenses;
 
     if (transaction == 'Income') {
-      widget.balance = balance + int.parse(amountcontroller.text);
+      widget.balance = balance + double.parse(amountcontroller.text);
       createTransaction();
       docUser.update({
         'totalIncome': widget.totalIncomeData,
@@ -542,23 +542,23 @@ class _AddTransactionState extends State<AddTransaction> {
       });
       if (category == 'Entertainment') {
         docUser.update({
-          'cat1': int.parse(amountcontroller.text) + cat1,
+          'cat1': double.parse(amountcontroller.text) + cat1,
         });
       } else if (category == 'Social & Lifestyle') {
         docUser.update({
-          'cat2': int.parse(amountcontroller.text) + cat2,
+          'cat2': double.parse(amountcontroller.text) + cat2,
         });
       } else if (category == 'Beauty & Health') {
         docUser.update({
-          'cat3': int.parse(amountcontroller.text) + cat3,
+          'cat3': double.parse(amountcontroller.text) + cat3,
         });
       } else if (category == 'Work & Education') {
         docUser.update({
-          'cat4': int.parse(amountcontroller.text) + cat4,
+          'cat4': double.parse(amountcontroller.text) + cat4,
         });
       } else if (category == 'Others') {
         docUser.update({
-          'cat5': int.parse(amountcontroller.text) + cat5,
+          'cat5': double.parse(amountcontroller.text) + cat5,
         });
       }
       Navigator.pop(context);
@@ -569,7 +569,7 @@ class _AddTransactionState extends State<AddTransaction> {
         const Color.fromARGB(255, 47, 101, 114),
       );
     } else {
-      if (balance < int.parse(amountcontroller.text)) {
+      if (balance < double.parse(amountcontroller.text)) {
         print(balance);
         alertBanner(
           'Error !!',
@@ -578,7 +578,7 @@ class _AddTransactionState extends State<AddTransaction> {
           const Color.fromARGB(255, 157, 37, 37),
         );
       } else {
-        widget.balance = balance - int.parse(amountcontroller.text);
+        widget.balance = balance - double.parse(amountcontroller.text);
         createTransaction();
         docUser.update({
           'totalIncome': widget.totalIncomeData,
@@ -587,23 +587,23 @@ class _AddTransactionState extends State<AddTransaction> {
         });
         if (category == 'Entertainment') {
           docUser.update({
-            'cat1': int.parse(amountcontroller.text) + cat1,
+            'cat1': double.parse(amountcontroller.text) + cat1,
           });
         } else if (category == 'Social & Lifestyle') {
           docUser.update({
-            'cat2': int.parse(amountcontroller.text) + cat2,
+            'cat2': double.parse(amountcontroller.text) + cat2,
           });
         } else if (category == 'Beauty & Health') {
           docUser.update({
-            'cat3': int.parse(amountcontroller.text) + cat3,
+            'cat3': double.parse(amountcontroller.text) + cat3,
           });
         } else if (category == 'Work & Education') {
           docUser.update({
-            'cat4': int.parse(amountcontroller.text) + cat4,
+            'cat4': double.parse(amountcontroller.text) + cat4,
           });
         } else if (category == 'Others') {
           docUser.update({
-            'cat5': int.parse(amountcontroller.text) + cat5,
+            'cat5': double.parse(amountcontroller.text) + cat5,
           });
         }
         Navigator.pop(context);

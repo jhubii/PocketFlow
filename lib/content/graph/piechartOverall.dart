@@ -110,9 +110,9 @@ class _PieChartOverallState extends State<PieChartOverall> {
             return const Text("Loading");
           }
           var transactionDocument = snapshot.data;
-          int income = transactionDocument!['totalIncome'];
-          int expense = transactionDocument['totalExpense'];
-          int totalMoneyFlow = income + expense;
+          double income = transactionDocument!['totalIncome'];
+          double expense = transactionDocument['totalExpense'];
+          double totalMoneyFlow = income + expense;
           double incomePercent = (income / totalMoneyFlow) * 100;
           double expensePercent = (expense / totalMoneyFlow) * 100;
           return PieChart(
