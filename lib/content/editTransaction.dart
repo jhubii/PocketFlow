@@ -68,34 +68,41 @@ class _EditTransactionState extends State<EditTransaction> {
     super.dispose();
   }
 
+  Future<bool> _onWillPop() async {
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            backButtonClicked(widget.transactions.id);
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-            size: 21,
-            color: mainDesignColor,
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              backButtonClicked(widget.transactions.id);
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_rounded,
+              size: 21,
+              color: mainDesignColor,
+            ),
           ),
-        ),
-        title: const Text(
-          'Edit Transaction',
-          style: TextStyle(
-            fontSize: 17,
-            color: mainDesignColor,
-            fontWeight: FontWeight.bold,
+          title: const Text(
+            'Edit Transaction',
+            style: TextStyle(
+              fontSize: 17,
+              color: mainDesignColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0.2,
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0.2,
+        body: buildContent(),
       ),
-      body: buildContent(),
     );
   }
 
