@@ -538,6 +538,50 @@ class _EditTransactionState extends State<EditTransaction> {
     var amount = await docTransaction.get().then((value) {
       return value.get('amount');
     });
+
+    var cat1 = await docUser.get().then((value) {
+      return value.get('cat1');
+    });
+    var cat2 = await docUser.get().then((value) {
+      return value.get('cat2');
+    });
+    var cat3 = await docUser.get().then((value) {
+      return value.get('cat3');
+    });
+    var cat4 = await docUser.get().then((value) {
+      return value.get('cat4');
+    });
+    var cat5 = await docUser.get().then((value) {
+      return value.get('cat5');
+    });
+
+    if (category == 'Entertainment') {
+      var oldcat1 = cat1 + amount;
+      docUser.update({
+        'cat1': oldcat1,
+      });
+    } else if (category == 'Social & Lifestyle') {
+      var oldcat2 = cat2 + amount;
+      docUser.update({
+        'cat2': oldcat2,
+      });
+    } else if (category == 'Beauty & Health') {
+      var oldcat3 = cat3 + amount;
+      docUser.update({
+        'cat3': oldcat3,
+      });
+    } else if (category == 'Work & Education') {
+      var oldcat4 = cat4 + amount;
+      docUser.update({
+        'cat4': oldcat4,
+      });
+    } else if (category == 'Others') {
+      var oldcat5 = cat5 + amount;
+      docUser.update({
+        'cat5': oldcat5,
+      });
+    }
+
     if (transactionType == 'Income') {
       var oldbalance = balance + amount;
       docUser.update({
@@ -672,48 +716,43 @@ class _EditTransactionState extends State<EditTransaction> {
     var oldamount = await docTransaction.get().then((value) {
       return value.get('amount');
     });
-    var cat1 = await docUser.get().then((value) {
+    int cat1 = await docUser.get().then((value) {
       return value.get('cat1');
     });
-    var cat2 = await docUser.get().then((value) {
+    int cat2 = await docUser.get().then((value) {
       return value.get('cat2');
     });
-    var cat3 = await docUser.get().then((value) {
+    int cat3 = await docUser.get().then((value) {
       return value.get('cat3');
     });
-    var cat4 = await docUser.get().then((value) {
+    int cat4 = await docUser.get().then((value) {
       return value.get('cat4');
     });
-    var cat5 = await docUser.get().then((value) {
+    int cat5 = await docUser.get().then((value) {
       return value.get('cat5');
     });
 
     if (category == 'Entertainment') {
-      widget.oldcat1 = cat1 - oldamount;
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
     } else if (category == 'Social & Lifestyle') {
-      widget.oldcat2 = cat2 - oldamount;
       widget.oldcat1 = cat1;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
     } else if (category == 'Beauty & Health') {
-      widget.oldcat3 = cat3 - oldamount;
       widget.oldcat2 = cat2;
       widget.oldcat1 = cat1;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
     } else if (category == 'Work & Education') {
-      widget.oldcat4 = cat4 - oldamount;
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat1 = cat1;
       widget.oldcat5 = cat5;
     } else if (category == 'Others') {
-      widget.oldcat5 = cat5 - oldamount;
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
@@ -721,31 +760,31 @@ class _EditTransactionState extends State<EditTransaction> {
     }
 
     if (category == 'Entertainment') {
-      widget.newcat1 = int.parse(amountcontroller.text) + widget.oldcat1;
+      widget.newcat1 = int.parse(amountcontroller.text) + widget.oldcat1 + cat1;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Social & Lifestyle') {
-      widget.newcat2 = int.parse(amountcontroller.text) + widget.oldcat2;
+      widget.newcat2 = int.parse(amountcontroller.text) + widget.oldcat2 + cat2;
       widget.newcat1 = widget.oldcat1;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Beauty & Health') {
-      widget.newcat3 = int.parse(amountcontroller.text) + widget.oldcat3;
+      widget.newcat3 = int.parse(amountcontroller.text) + widget.oldcat3 + cat3;
       widget.newcat2 = widget.oldcat2;
       widget.newcat1 = widget.oldcat1;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Work & Education') {
-      widget.newcat4 = int.parse(amountcontroller.text) + widget.oldcat4;
+      widget.newcat4 = int.parse(amountcontroller.text) + widget.oldcat4 + cat4;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat1 = widget.oldcat1;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Others') {
-      widget.newcat5 = int.parse(amountcontroller.text) + widget.oldcat5;
+      widget.newcat5 = int.parse(amountcontroller.text) + widget.oldcat5 + cat5;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
@@ -765,8 +804,9 @@ class _EditTransactionState extends State<EditTransaction> {
         ? int.parse(amountcontroller.text) + widget.oldtotalExpenseData
         : widget.oldtotalExpenseData;
 
+    var amountcondition = balance + int.parse(amountcontroller.text);
     if (transaction == 'Income') {
-      if (int.parse(amountcontroller.text) < widget.totalExpenseData) {
+      if (amountcondition < widget.totalExpenseData) {
         alertBanner(
           'Error !!',
           "Amount entered should be greater than or equal to total expenses",

@@ -129,7 +129,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                     return data.title
                             .toString()
                             .toLowerCase()
-                            .contains(searchControlller.text.toLowerCase())
+                            .startsWith(searchControlller.text.toLowerCase())
                         ? transactionContent(data)
                         : Container();
                   }),
@@ -620,6 +620,53 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
     var amount = await docTransaction.get().then((value) {
       return value.get('amount');
     });
+    var category = await docTransaction.get().then((value) {
+      return value.get('category');
+    });
+
+    var cat1 = await docUser.get().then((value) {
+      return value.get('cat1');
+    });
+    var cat2 = await docUser.get().then((value) {
+      return value.get('cat2');
+    });
+    var cat3 = await docUser.get().then((value) {
+      return value.get('cat3');
+    });
+    var cat4 = await docUser.get().then((value) {
+      return value.get('cat4');
+    });
+    var cat5 = await docUser.get().then((value) {
+      return value.get('cat5');
+    });
+
+    if (category == 'Entertainment') {
+      var oldcat1 = cat1 - amount;
+      docUser.update({
+        'cat1': oldcat1,
+      });
+    } else if (category == 'Social & Lifestyle') {
+      var oldcat2 = cat2 - amount;
+      docUser.update({
+        'cat2': oldcat2,
+      });
+    } else if (category == 'Beauty & Health') {
+      var oldcat3 = cat3 - amount;
+      docUser.update({
+        'cat3': oldcat3,
+      });
+    } else if (category == 'Work & Education') {
+      var oldcat4 = cat4 - amount;
+      docUser.update({
+        'cat4': oldcat4,
+      });
+    } else if (category == 'Others') {
+      var oldcat5 = cat5 - amount;
+      docUser.update({
+        'cat5': oldcat5,
+      });
+    }
+
     if (transactionType == 'Income') {
       var oldbalance = balance - amount;
       docUser.update({
