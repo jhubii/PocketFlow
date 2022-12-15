@@ -68,41 +68,33 @@ class _EditTransactionState extends State<EditTransaction> {
     super.dispose();
   }
 
-  Future<bool> _onWillPop() async {
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              backButtonClicked(widget.transactions.id);
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios_rounded,
-              size: 21,
-              color: mainDesignColor,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+            size: 21,
+            color: mainDesignColor,
           ),
-          title: const Text(
-            'Edit Transaction',
-            style: TextStyle(
-              fontSize: 17,
-              color: mainDesignColor,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          elevation: 0.2,
         ),
-        body: buildContent(),
+        title: const Text(
+          'Edit Transaction',
+          style: TextStyle(
+            fontSize: 17,
+            color: mainDesignColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0.2,
       ),
+      body: buildContent(),
     );
   }
 
@@ -477,7 +469,7 @@ class _EditTransactionState extends State<EditTransaction> {
                         size: 50,
                       )),
                       const Text(
-                        "Are you sure you wan't to update this transaction?",
+                        "Are you sure you want to update this transaction?",
                         style: TextStyle(
                           color: mainDesignColor,
                           fontSize: 15,
@@ -530,77 +522,6 @@ class _EditTransactionState extends State<EditTransaction> {
           ),
         ),
       );
-
-  backButtonClicked(String id) async {
-    final docTransaction =
-        FirebaseFirestore.instance.collection('Transactions').doc(id);
-    final docUser =
-        FirebaseFirestore.instance.collection('Users').doc(widget.user.id);
-    var transactionType = await docTransaction.get().then((value) {
-      return value.get('transactionType');
-    });
-    var balance = await docUser.get().then((value) {
-      return value.get('balance');
-    });
-    var amount = await docTransaction.get().then((value) {
-      return value.get('amount');
-    });
-
-    var cat1 = await docUser.get().then((value) {
-      return value.get('cat1');
-    });
-    var cat2 = await docUser.get().then((value) {
-      return value.get('cat2');
-    });
-    var cat3 = await docUser.get().then((value) {
-      return value.get('cat3');
-    });
-    var cat4 = await docUser.get().then((value) {
-      return value.get('cat4');
-    });
-    var cat5 = await docUser.get().then((value) {
-      return value.get('cat5');
-    });
-
-    if (category == 'Entertainment') {
-      var oldcat1 = cat1 + amount;
-      docUser.update({
-        'cat1': oldcat1,
-      });
-    } else if (category == 'Social & Lifestyle') {
-      var oldcat2 = cat2 + amount;
-      docUser.update({
-        'cat2': oldcat2,
-      });
-    } else if (category == 'Beauty & Health') {
-      var oldcat3 = cat3 + amount;
-      docUser.update({
-        'cat3': oldcat3,
-      });
-    } else if (category == 'Work & Education') {
-      var oldcat4 = cat4 + amount;
-      docUser.update({
-        'cat4': oldcat4,
-      });
-    } else if (category == 'Others') {
-      var oldcat5 = cat5 + amount;
-      docUser.update({
-        'cat5': oldcat5,
-      });
-    }
-
-    if (transactionType == 'Income') {
-      var oldbalance = balance + amount;
-      docUser.update({
-        'balance': oldbalance,
-      });
-    } else {
-      var oldbalance = balance - amount;
-      docUser.update({
-        'balance': oldbalance,
-      });
-    }
-  }
 
   errorHandling() {
     if (transaction == '') {
@@ -669,9 +590,10 @@ class _EditTransactionState extends State<EditTransaction> {
             return const Text("Loading");
           }
           var transactionDocument = snapshot.data;
+          var data = transactionDocument![info];
+          var initialbalance = data - widget.transactions.amount;
           return Text(
-              widget.value
-                  .format(double.parse(transactionDocument![info].toString())),
+              widget.value.format(double.parse(initialbalance.toString())),
               style: style);
         });
   }
@@ -739,27 +661,32 @@ class _EditTransactionState extends State<EditTransaction> {
       return value.get('cat5');
     });
 
-    if (category == 'Entertainment') {
+    if (widget.transactions.category == 'Entertainment') {
+      widget.newcat1 = cat1 - double.parse(amountcontroller.text);
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
-    } else if (category == 'Social & Lifestyle') {
+    } else if (widget.transactions.category == 'Social & Lifestyle') {
+      widget.newcat2 = cat2 - double.parse(amountcontroller.text);
       widget.oldcat1 = cat1;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
-    } else if (category == 'Beauty & Health') {
+    } else if (widget.transactions.category == 'Beauty & Health') {
+      widget.newcat3 = cat3 - double.parse(amountcontroller.text);
       widget.oldcat2 = cat2;
       widget.oldcat1 = cat1;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
-    } else if (category == 'Work & Education') {
+    } else if (widget.transactions.category == 'Work & Education') {
+      widget.newcat4 = cat4 - double.parse(amountcontroller.text);
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat1 = cat1;
       widget.oldcat5 = cat5;
-    } else if (category == 'Others') {
+    } else if (widget.transactions.category == 'Others') {
+      widget.newcat5 = cat5 - double.parse(amountcontroller.text);
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
@@ -817,6 +744,7 @@ class _EditTransactionState extends State<EditTransaction> {
         : widget.oldtotalExpenseData;
 
     var amountcondition = balance + double.parse(amountcontroller.text);
+    var initialbalance = balance - widget.transactions.amount;
     if (transaction == 'Income') {
       if (amountcondition < widget.totalExpenseData) {
         alertBanner(
@@ -831,7 +759,7 @@ class _EditTransactionState extends State<EditTransaction> {
             widget.oldbalance + double.parse(amountcontroller.text);
       }
     } else {
-      if (balance < double.parse(amountcontroller.text)) {
+      if (initialbalance < double.parse(amountcontroller.text)) {
         alertBanner(
           'Error !!',
           "Insufficient Balance",

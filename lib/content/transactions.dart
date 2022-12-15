@@ -425,7 +425,6 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                editButtonClicked(transactions.id);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -605,80 +604,6 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
             )
             .toList(),
       );
-
-  editButtonClicked(String id) async {
-    final docTransaction =
-        FirebaseFirestore.instance.collection('Transactions').doc(id);
-    final docUser =
-        FirebaseFirestore.instance.collection('Users').doc(widget.user.id);
-    var transactionType = await docTransaction.get().then((value) {
-      return value.get('transactionType');
-    });
-    var balance = await docUser.get().then((value) {
-      return value.get('balance');
-    });
-    var amount = await docTransaction.get().then((value) {
-      return value.get('amount');
-    });
-    var category = await docTransaction.get().then((value) {
-      return value.get('category');
-    });
-
-    var cat1 = await docUser.get().then((value) {
-      return value.get('cat1');
-    });
-    var cat2 = await docUser.get().then((value) {
-      return value.get('cat2');
-    });
-    var cat3 = await docUser.get().then((value) {
-      return value.get('cat3');
-    });
-    var cat4 = await docUser.get().then((value) {
-      return value.get('cat4');
-    });
-    var cat5 = await docUser.get().then((value) {
-      return value.get('cat5');
-    });
-
-    if (category == 'Entertainment') {
-      var oldcat1 = cat1 - amount;
-      docUser.update({
-        'cat1': oldcat1,
-      });
-    } else if (category == 'Social & Lifestyle') {
-      var oldcat2 = cat2 - amount;
-      docUser.update({
-        'cat2': oldcat2,
-      });
-    } else if (category == 'Beauty & Health') {
-      var oldcat3 = cat3 - amount;
-      docUser.update({
-        'cat3': oldcat3,
-      });
-    } else if (category == 'Work & Education') {
-      var oldcat4 = cat4 - amount;
-      docUser.update({
-        'cat4': oldcat4,
-      });
-    } else if (category == 'Others') {
-      var oldcat5 = cat5 - amount;
-      docUser.update({
-        'cat5': oldcat5,
-      });
-    }
-
-    if (transactionType == 'Income') {
-      var oldbalance = balance - amount;
-      docUser.update({
-        'balance': oldbalance,
-      });
-    } else {
-      var oldbalance = balance + amount;
-      docUser.update({
-        'balance': oldbalance,
-      });
-    }
-  }
 
   Widget realtimeData(id, info, style) {
     return StreamBuilder(

@@ -578,7 +578,6 @@ class _AddTransactionState extends State<AddTransaction> {
         );
       } else {
         Navigator.pop(context);
-        Navigator.pop(context);
         widget.balance = balance - double.parse(amountcontroller.text);
         createTransaction();
         docUser.update({
