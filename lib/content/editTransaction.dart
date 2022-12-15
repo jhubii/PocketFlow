@@ -7,6 +7,7 @@ import 'package:PocketFlow/design/style.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -256,11 +257,14 @@ class _EditTransactionState extends State<EditTransaction> {
                     ),
                     TextButton(
                       onPressed: () async {
-                        DateTime? newDate = await showDatePicker(
+                        DateTime? newDate = await showRoundedDatePicker(
                           context: context,
                           initialDate: now,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
+                          borderRadius: 20,
+                          theme: ThemeData(primarySwatch: Colors.teal),
+                          height: 320,
                         );
 
                         if (newDate == null) return;
@@ -591,7 +595,12 @@ class _EditTransactionState extends State<EditTransaction> {
           }
           var transactionDocument = snapshot.data;
           var data = transactionDocument![info];
-          var initialbalance = data - widget.transactions.amount;
+          var totatIncome = transactionDocument['totalIncome'];
+
+          var initialbalance = 0.0;
+          widget.transactions.transactionType == 'Income'
+              ? initialbalance = totatIncome - widget.transactions.amount
+              : initialbalance = totatIncome + widget.transactions.amount;
           return Text(
               widget.value.format(double.parse(initialbalance.toString())),
               style: style);
@@ -662,31 +671,31 @@ class _EditTransactionState extends State<EditTransaction> {
     });
 
     if (widget.transactions.category == 'Entertainment') {
-      widget.newcat1 = cat1 - double.parse(amountcontroller.text);
+      widget.oldcat1 = cat1 - widget.transactions.amount;
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
     } else if (widget.transactions.category == 'Social & Lifestyle') {
-      widget.newcat2 = cat2 - double.parse(amountcontroller.text);
+      widget.oldcat2 = cat2 - widget.transactions.amount;
       widget.oldcat1 = cat1;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
     } else if (widget.transactions.category == 'Beauty & Health') {
-      widget.newcat3 = cat3 - double.parse(amountcontroller.text);
+      widget.oldcat3 = cat3 - widget.transactions.amount;
       widget.oldcat2 = cat2;
       widget.oldcat1 = cat1;
       widget.oldcat4 = cat4;
       widget.oldcat5 = cat5;
     } else if (widget.transactions.category == 'Work & Education') {
-      widget.newcat4 = cat4 - double.parse(amountcontroller.text);
+      widget.oldcat4 = cat4 - widget.transactions.amount;
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat1 = cat1;
       widget.oldcat5 = cat5;
     } else if (widget.transactions.category == 'Others') {
-      widget.newcat5 = cat5 - double.parse(amountcontroller.text);
+      widget.oldcat5 = cat5 - widget.transactions.amount;
       widget.oldcat2 = cat2;
       widget.oldcat3 = cat3;
       widget.oldcat4 = cat4;
@@ -694,36 +703,31 @@ class _EditTransactionState extends State<EditTransaction> {
     }
 
     if (category == 'Entertainment') {
-      widget.newcat1 =
-          double.parse(amountcontroller.text) + widget.oldcat1 + cat1;
+      widget.newcat1 = double.parse(amountcontroller.text) + widget.oldcat1;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Social & Lifestyle') {
-      widget.newcat2 =
-          double.parse(amountcontroller.text) + widget.oldcat2 + cat2;
+      widget.newcat2 = double.parse(amountcontroller.text) + widget.oldcat2;
       widget.newcat1 = widget.oldcat1;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Beauty & Health') {
-      widget.newcat3 =
-          double.parse(amountcontroller.text) + widget.oldcat3 + cat3;
+      widget.newcat3 = double.parse(amountcontroller.text) + widget.oldcat3;
       widget.newcat2 = widget.oldcat2;
       widget.newcat1 = widget.oldcat1;
       widget.newcat4 = widget.oldcat4;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Work & Education') {
-      widget.newcat4 =
-          double.parse(amountcontroller.text) + widget.oldcat4 + cat4;
+      widget.newcat4 = double.parse(amountcontroller.text) + widget.oldcat4;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat1 = widget.oldcat1;
       widget.newcat5 = widget.oldcat5;
     } else if (category == 'Others') {
-      widget.newcat5 =
-          double.parse(amountcontroller.text) + widget.oldcat5 + cat5;
+      widget.newcat5 = double.parse(amountcontroller.text) + widget.oldcat5;
       widget.newcat2 = widget.oldcat2;
       widget.newcat3 = widget.oldcat3;
       widget.newcat4 = widget.oldcat4;
@@ -735,6 +739,8 @@ class _EditTransactionState extends State<EditTransaction> {
     widget.oldtotalExpenseData =
         transaction == 'Expense' ? totalExpenses - oldamount : totalExpenses;
     widget.oldbalance = balance;
+    widget.oldbalance =
+        transaction == 'Income' ? balance - oldamount : balance + oldamount;
 
     widget.totalIncomeData = transaction == 'Income'
         ? double.parse(amountcontroller.text) + widget.oldtotalIncomeData

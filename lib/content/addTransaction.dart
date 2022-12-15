@@ -6,6 +6,7 @@ import 'package:PocketFlow/design/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -240,11 +241,14 @@ class _AddTransactionState extends State<AddTransaction> {
                     ),
                     TextButton(
                       onPressed: () async {
-                        DateTime? newDate = await showDatePicker(
+                        DateTime? newDate = await showRoundedDatePicker(
                           context: context,
                           initialDate: now,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
+                          borderRadius: 20,
+                          theme: ThemeData(primarySwatch: Colors.teal),
+                          height: 320,
                         );
 
                         if (newDate == null) return;

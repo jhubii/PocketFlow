@@ -535,12 +535,6 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
                               onPressed: () {
                                 deleteTransaction(id);
                                 Navigator.pop(context);
-                                alertBanner(
-                                  'Success !!',
-                                  "Transaction was deleted",
-                                  'Success',
-                                  const Color.fromARGB(255, 47, 101, 114),
-                                );
                               },
                               child: const Text(
                                 'Yes',
@@ -739,16 +733,32 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
     widget.balance =
         transaction == 'Income' ? balance - amount : balance + amount;
 
-    docUser.update({
-      'totalIncome': widget.totalIncomeData,
-      'totalExpense': widget.totalExpenseData,
-      'balance': widget.balance,
-      'cat1': widget.cat1,
-      'cat2': widget.cat2,
-      'cat3': widget.cat3,
-      'cat4': widget.cat4,
-      'cat5': widget.cat5,
-    });
-    docTransaction.delete();
+    if (widget.balance < 0) {
+      alertBanner(
+        'Error !!',
+        "Unable to delete",
+        'Error',
+        const Color.fromARGB(255, 157, 37, 37),
+      );
+    } else {
+      docUser.update({
+        'totalIncome': widget.totalIncomeData,
+        'totalExpense': widget.totalExpenseData,
+        'balance': widget.balance,
+        'cat1': widget.cat1,
+        'cat2': widget.cat2,
+        'cat3': widget.cat3,
+        'cat4': widget.cat4,
+        'cat5': widget.cat5,
+      });
+      docTransaction.delete();
+
+      alertBanner(
+        'Success !!',
+        "Transaction was deleted",
+        'Success',
+        const Color.fromARGB(255, 47, 101, 114),
+      );
+    }
   }
 }

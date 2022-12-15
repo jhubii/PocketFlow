@@ -675,6 +675,7 @@ class _ProfileState extends State<Profile> {
                                   Profile.formKey.currentState!.validate();
 
                               if (isValidForm) {
+                                Navigator.pop(context);
                                 popUpConfirmation(
                                     editTitle, newpasswordcontroller, user.id);
                               }
@@ -978,7 +979,6 @@ class _ProfileState extends State<Profile> {
                           TextButton(
                             onPressed: () {
                               if (editTitle == 'Password') {
-                                Navigator.pop(context);
                                 Navigator.pop(context);
                                 changeAuthPassword(oldpasswordcontroller.text,
                                     newpasswordcontroller.text);
@@ -1332,6 +1332,10 @@ class _ProfileState extends State<Profile> {
           const Color.fromARGB(255, 47, 101, 114),
         );
       }).catchError((error) {
+        setState(() {
+          newpasswordcontroller.text = "";
+          oldpasswordcontroller.text = "";
+        });
         alertBanner(
           'Error !!',
           error,
@@ -1340,7 +1344,10 @@ class _ProfileState extends State<Profile> {
         );
       });
     }).catchError((err) {
-      Navigator.pop(context);
+      setState(() {
+        newpasswordcontroller.text = "";
+        oldpasswordcontroller.text = "";
+      });
       alertBanner(
         'Error !!',
         err.toString(),
