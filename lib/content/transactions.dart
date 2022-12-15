@@ -736,7 +736,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
     if (widget.balance < 0) {
       alertBanner(
         'Error !!',
-        "Unable to delete",
+        "Unable to delete. Balance should be non-negative",
         'Error',
         const Color.fromARGB(255, 157, 37, 37),
       );

@@ -772,6 +772,13 @@ class _EditTransactionState extends State<EditTransaction> {
           'Error',
           const Color.fromARGB(255, 157, 37, 37),
         );
+      } else if (widget.balance < 0) {
+        alertBanner(
+          'Error !!',
+          "Unable to edit. Balance should be non-negative",
+          'Error',
+          const Color.fromARGB(255, 157, 37, 37),
+        );
       } else {
         popUpConfirmation();
         widget.balance =
