@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class Profile extends StatefulWidget {
   Profile({
@@ -763,7 +765,7 @@ class _ProfileState extends State<Profile> {
                         size: 50,
                       )),
                       const Text(
-                        "Are you sure you wan't to update your profile picture?",
+                        "Are you sure you want to update your profile picture?",
                         style: TextStyle(
                           color: mainDesignColor,
                           fontSize: 15,
@@ -776,8 +778,9 @@ class _ProfileState extends State<Profile> {
                         children: [
                           TextButton(
                             onPressed: () {
-                              uploadFile();
                               Navigator.pop(context);
+                              Navigator.pop(context);
+                              uploadFile();
                             },
                             child: const Text(
                               'Yes',
@@ -1183,6 +1186,18 @@ class _ProfileState extends State<Profile> {
 
     final ref = FirebaseStorage.instance.ref().child(path);
 
+    showDialog(
+      context: context,
+      useRootNavigator: false,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: LoadingAnimationWidget.threeArchedCircle(
+          color: const Color.fromARGB(255, 40, 159, 182),
+          size: 70,
+        ),
+      ),
+    );
+
     try {
       setState(() {
         uploadTask = ref.putFile(file);
@@ -1202,6 +1217,8 @@ class _ProfileState extends State<Profile> {
     setState(() {
       uploadTask = null;
     });
+
+    Navigator.of(context).pop();
   }
 
   Widget realtimeDataImage(id, info) {
@@ -1375,7 +1392,6 @@ class _ProfileState extends State<Profile> {
       'image': image,
     });
 
-    Navigator.pop(context);
     alertBanner(
       'Success !!',
       "Profile picture has been updated",
