@@ -596,11 +596,13 @@ class _EditTransactionState extends State<EditTransaction> {
           var transactionDocument = snapshot.data;
           var data = transactionDocument![info];
           var totatIncome = transactionDocument['totalIncome'];
-
+          ;
           var initialbalance = 0.0;
+
           widget.transactions.transactionType == 'Income'
-              ? initialbalance = totatIncome - widget.transactions.amount
-              : initialbalance = totatIncome + widget.transactions.amount;
+              ? initialbalance = data - widget.transactions.amount
+              : initialbalance = data + widget.transactions.amount;
+          print(initialbalance);
           return Text(
               widget.value.format(double.parse(initialbalance.toString())),
               style: style);
@@ -749,7 +751,10 @@ class _EditTransactionState extends State<EditTransaction> {
         ? double.parse(amountcontroller.text) + widget.oldtotalExpenseData
         : widget.oldtotalExpenseData;
 
-    var amountcondition = balance + double.parse(amountcontroller.text);
+    var amountcondition =
+        widget.totalIncomeData + double.parse(amountcontroller.text);
+    print(amountcondition);
+    print(widget.totalExpenseData);
     var initialbalance = balance - widget.transactions.amount;
     if (transaction == 'Income') {
       if (amountcondition < widget.totalExpenseData) {

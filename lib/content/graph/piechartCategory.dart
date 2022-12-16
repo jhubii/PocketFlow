@@ -58,7 +58,7 @@ class _PieChartCategoryState extends State<PieChartCategory> {
               ),
             );
           } else {
-            return userDocument!['balance'] != 0
+            return userDocument!['totalIncome'] != 0
                 ? realtimeData(id)
                 : const Center(
                     child: Text(

@@ -89,7 +89,7 @@ class _PieChartOverallState extends State<PieChartOverall> {
               ),
             );
           } else {
-            return userDocument!['balance'] != 0
+            return userDocument!['totalIncome'] != 0
                 ? realtimeData(id)
                 : const Center(
                     child: Text(
