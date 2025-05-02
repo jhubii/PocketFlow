@@ -433,7 +433,7 @@ class _EditTransactionState extends State<EditTransaction> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 100,
             height: 200,
             child: Stack(
@@ -596,7 +596,6 @@ class _EditTransactionState extends State<EditTransaction> {
           var transactionDocument = snapshot.data;
           var data = transactionDocument![info];
           var totatIncome = transactionDocument['totalIncome'];
-          ;
           var initialbalance = 0.0;
 
           widget.transactions.transactionType == 'Income'

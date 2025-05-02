@@ -15,7 +15,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class Profile extends StatefulWidget {
   Profile({
@@ -340,7 +339,7 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 200,
             height: 220,
             child: Stack(
@@ -452,7 +451,7 @@ class _ProfileState extends State<Profile> {
               Radius.circular(32.0),
             ),
           ),
-          content: Container(
+          content: SizedBox(
             width: 150,
             height: 325,
             child: Column(
@@ -495,7 +494,7 @@ class _ProfileState extends State<Profile> {
         builder: (context) => AlertDialog(
           clipBehavior: Clip.antiAlias,
           contentPadding: const EdgeInsets.all(5),
-          content: Container(
+          content: SizedBox(
             width: 150,
             height: 350,
             child: Column(
@@ -608,7 +607,7 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 200,
             height: 340,
             child: Stack(
@@ -726,7 +725,7 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 100,
             height: 200,
             child: Stack(
@@ -825,7 +824,7 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 100,
             height: 200,
             child: Stack(
@@ -925,7 +924,7 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 100,
             height: 200,
             child: Stack(
@@ -1033,7 +1032,7 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 100,
             height: 200,
             child: Stack(
@@ -1173,9 +1172,9 @@ class _ProfileState extends State<Profile> {
 
   String generateRandomString(int len) {
     var r = Random();
-    const _chars =
+    const chars =
         'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-    return List.generate(len, (index) => _chars[r.nextInt(_chars.length)])
+    return List.generate(len, (index) => chars[r.nextInt(chars.length)])
         .join();
   }
 
@@ -1380,7 +1379,7 @@ class _ProfileState extends State<Profile> {
         .collection('Transactions')
         .where('userID', isEqualTo: id);
     return transactions.get().then((querySnapshot) {
-      querySnapshot.docs.forEach((document) {
+      for (var document in querySnapshot.docs) {
         batch.delete(document.reference);
         alertBanner(
           'Success !!',
@@ -1388,7 +1387,7 @@ class _ProfileState extends State<Profile> {
           'Success',
           const Color.fromARGB(255, 47, 101, 114),
         );
-      });
+      }
       return batch.commit();
     });
   }

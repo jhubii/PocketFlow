@@ -248,7 +248,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 120,
             height: 550,
             child: Stack(
@@ -477,7 +477,7 @@ class _DisplayTransactionsState extends State<DisplayTransactions> {
             ),
           ),
           contentPadding: const EdgeInsets.only(top: 0.0),
-          content: Container(
+          content: SizedBox(
             width: 100,
             height: 200,
             child: Stack(

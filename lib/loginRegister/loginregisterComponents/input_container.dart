@@ -1,4 +1,3 @@
-import 'package:PocketFlow/design/colors.dart';
 import 'package:flutter/material.dart';
 
 class InputContainer extends StatelessWidget {

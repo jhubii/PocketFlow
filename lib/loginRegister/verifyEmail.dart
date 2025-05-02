@@ -5,7 +5,6 @@ import 'package:PocketFlow/design/colors.dart';
 import 'package:PocketFlow/design/style.dart';
 import 'package:PocketFlow/loginRegister/loginregisterComponents/rounded_button.dart';
 import 'package:another_flushbar/flushbar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

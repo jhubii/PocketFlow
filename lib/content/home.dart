@@ -579,6 +579,7 @@ class _HomeState extends State<Home> {
     if (snapshot.exists) {
       return Users.fromJson(snapshot.data()!);
     }
+    return null;
   }
 
   Stream<List<Transactions>> readTransactions(id) => FirebaseFirestore.instance
