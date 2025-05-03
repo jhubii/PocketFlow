@@ -2,13 +2,13 @@
   <img src="assets/images/boxlogowhitebold.png" alt="PocketFlow Logo" width="180"/>
 </p>
 
-# 💸 PocketFlow
+# PocketFlow
 
 **PocketFlow** is a personal finance tracker built with Flutter. It helps users manage their daily income and expenses in a clean, visual, and interactive way. With features like transaction tracking, category-based analytics, and profile management, PocketFlow simplifies money management and empowers users to stay financially aware and organized.
 
 ---
 
-## 🧩 Features
+## Features
 
 - 🔐 Secure login and registration
 - 🏦 Real-time balance overview
@@ -21,7 +21,7 @@
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -40,7 +40,7 @@ flutter run
 
 ```
 
-## 📸 Screenshots
+## Screenshots
 
 | Login Screen | Register Screen |
 |--------------|-----------------|
@@ -56,7 +56,7 @@ flutter run
 
 ---
 
-## 📱 App Icon
+## App Icon
 <p align="center">
   <img src="assets/readme/screen_logo.png" width="100"/>
 </p>
